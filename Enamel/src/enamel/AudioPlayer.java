@@ -1,20 +1,13 @@
 package enamel;
 
 public class AudioPlayer extends Player {
-	
-<<<<<<< Upstream, based on branch 'master' of https://github.com/Shogri/EECS2311-TBB
 
 
 	//test push - amaan
 	//Test Push - Amer Alshoghri
-
-
 	
 
-=======
-	//Hello world!!
-	// arsh
->>>>>>> 10a4ebd Arsh's push
+
 	public AudioPlayer(int cellNum, int buttonNum)
 	{
 	}
