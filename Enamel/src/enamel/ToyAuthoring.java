@@ -12,13 +12,13 @@ public class ToyAuthoring {
 	public static void main(String[] args) throws IOException {
 
 		ScenarioParser s = new ScenarioParser(true);
-		JFileChooser chooser = new JFileChooser();
+		JFileChooser chooser1 = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Factory Scenario Files", "txt");
-		chooser.setFileFilter(filter);
-		int returnVal = chooser.showOpenDialog(parent);
+		chooser1.setFileFilter(filter);
+		int returnVal = chooser1.showOpenDialog(parent);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
-			s.setScenarioFile(chooser.getSelectedFile().getAbsolutePath()); //uses JFileChooser to generate path of file
+			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
+			s.setScenarioFile(chooser1.getSelectedFile().getAbsolutePath()); //uses JFileChooser to generate path of file
 		}
 	}
 }
