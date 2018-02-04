@@ -1,9 +1,11 @@
 package enamel;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -51,18 +53,28 @@ public abstract class Player {
 		//and set the output to the appropriate directory. 
 		
 		//To find out what's being logged, search and find any "logger.log" calls.
-		ConsoleHandler consoleHandler = new ConsoleHandler();
-        consoleHandler.setFormatter(new Formatter() {
+		FileHandler fileHandler;
+		try {
+			fileHandler = new FileHandler("/LOG.txt");
+		
+        fileHandler.setFormatter(new Formatter() {
     		private String format = "[%1$s] [%2$s] %3$s %n";
 			private SimpleDateFormat dateWithMillis = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss.SSS");
+			
 			@Override
 			public String format(LogRecord record) {
 				return String.format(format, dateWithMillis.format(new Date()), record.getSourceClassName(), formatMessage(record));
 			}
     	});
-    	logger.addHandler(consoleHandler);
+        
+    	logger.addHandler(fileHandler);
     	logger.setUseParentHandlers(false);
-	    
+
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		if (brailleCellNumber <= 0 || buttonNumber <= 0)
 			throw new IllegalArgumentException("Non-positive integer entered.");
 
