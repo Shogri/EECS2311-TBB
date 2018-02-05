@@ -223,7 +223,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 				this.WriteButton("Button "+output, filePath);
 				}
 
-				this.WriteButton(output, filePath);
+				
 
 			} catch (IOException e1) {
 				e1.printStackTrace();
