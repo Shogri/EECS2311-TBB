@@ -24,12 +24,12 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
+	private JPanel contentPane; 
 	public String output; // global variable for output from GUI's
 	public String filename;
 	public JButton b1;
 	public JButton b2;
-	public JButton b3;
+	public JButton b3; 
 	public File x; // global variable for absolute path of file
 	public boolean fileState; // true means new file, false means existing file(no use right now)
 
@@ -49,7 +49,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			this.launcher();
 			fileState = false;
 		} else {
-			System.exit(0);
+			System.exit(0); //terminate
 		}
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
