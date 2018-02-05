@@ -44,13 +44,17 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	public ScenarioFileEditor() throws IOException {
 		int y = JOptionPane.showConfirmDialog(null, "New File?");
 		if (y == JOptionPane.YES_OPTION) {
+			
 			filename = JOptionPane.showInputDialog(this, "Type in file name:");
 			filePath = new File(filename + ".txt");
 			fileState = true;
+			
 		} else if (y == JOptionPane.NO_OPTION) {
+			
 			JOptionPane.showMessageDialog(null, "Select your existing file");
 			this.launcher();
 			fileState = false;
+			
 		} else {
 			System.exit(0); //terminate
 		}
@@ -94,6 +98,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	}
 
 	public void launcher() throws IOException {
+		
 		JFileChooser chooser1 = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
 		chooser1.setFileFilter(filter);
@@ -101,6 +106,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
+		
+		if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
+		{
+			JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
+			this.launcher();
+		}
+		
 		filename = chooser1.getSelectedFile().getAbsolutePath();
 		filePath = new File(filename);
 	}
@@ -117,6 +129,12 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			String line2 = buffread.readLine();
 			
 			if (line1.matches("Cell [0-9+]"))
+			{
+				buffread.close();
+				return false;
+			}
+			
+			if (line2.matches("Button [0-9+]"))
 			{
 				buffread.close();
 				return false;
