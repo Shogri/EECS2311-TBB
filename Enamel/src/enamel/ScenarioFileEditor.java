@@ -32,7 +32,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	public String filename;
 	public JButton b1;
 	public JButton b2;
-	public JButton b3; 
+	public JButton b3;  //
 	public File filePath; // global variable for absolute path of file
 	public boolean fileState; // true means new file, false means existing file(no use right now)
 
