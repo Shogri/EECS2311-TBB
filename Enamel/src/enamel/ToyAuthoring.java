@@ -34,8 +34,8 @@ public class ToyAuthoring  extends JFrame implements ActionListener{
 		p.setLayout(new GridLayout(2,2));
 		
 		
-		String button1Text = "Yes"; //Yes Button
-		String button2Text = "No"; //No Button
+		String button1Text = "Yes"; //Yes Button text
+		String button2Text = "No"; //No Button text
 		
 		yes = new JButton();
 		yes.setText(button1Text);
