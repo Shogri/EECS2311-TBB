@@ -53,6 +53,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			
 			JOptionPane.showMessageDialog(null, "Select your existing file");
 			this.launcher();
+			if(!this.isScenarioFile(filename)){
+				System.exit(0);
+			}
+			
 			fileState = false;
 			
 		} else {
@@ -107,15 +111,18 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
 		
-		if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
-		{
-			JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
-			this.launcher();
-		}
+		//if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
+		//{
+			//System.out.println("failed");
+			//JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
+			//this.launcher();
+		//}
 		
 		filename = chooser1.getSelectedFile().getAbsolutePath();
 		filePath = new File(filename);
 	}
+	
+	
 
 	public boolean isScenarioFile(String file)
 	{
@@ -126,27 +133,30 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			BufferedReader buffread = new BufferedReader(filereader);
 			
 			String line1 = buffread.readLine();
+			System.out.println(line1);
 			String line2 = buffread.readLine();
+			System.out.println(line2);
 			
-			if (line1.matches("Cell [0-9+]"))
+			if (line1.matches("Cell [0-9+]") && line2.matches("Button [0-9+]"))
 			{
 				buffread.close();
-				return false;
-			}
-			
-			if (line2.matches("Button [0-9+]"))
-			{
+				return true;
+			}else{
+				System.out.println("failed");
+				JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
+				this.launcher();
 				buffread.close();
 				return false;
+				
 			}
+
 			
-			buffread.close();
 			
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		return true;
+		return false;
 	}
 	
 	/**
