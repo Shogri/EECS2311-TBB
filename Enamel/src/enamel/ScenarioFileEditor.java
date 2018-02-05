@@ -110,7 +110,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
-		
+		//
 		//if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
 		//{
 			//System.out.println("failed");
