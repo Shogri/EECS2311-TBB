@@ -8,9 +8,12 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 import java.awt.Font;
 import java.awt.Color;
@@ -30,7 +33,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	public JButton b1;
 	public JButton b2;
 	public JButton b3; 
-	public File x; // global variable for absolute path of file
+	public File filePath; // global variable for absolute path of file
 	public boolean fileState; // true means new file, false means existing file(no use right now)
 
 	/**
@@ -41,13 +44,17 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	public ScenarioFileEditor() throws IOException {
 		int y = JOptionPane.showConfirmDialog(null, "New File?");
 		if (y == JOptionPane.YES_OPTION) {
+			
 			filename = JOptionPane.showInputDialog(this, "Type in file name:");
-			x = new File(filename + ".txt");
+			filePath = new File(filename + ".txt");
 			fileState = true;
+			
 		} else if (y == JOptionPane.NO_OPTION) {
+			
 			JOptionPane.showMessageDialog(null, "Select your existing file");
 			this.launcher();
 			fileState = false;
+			
 		} else {
 			System.exit(0); //terminate
 		}
@@ -57,6 +64,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		//Edit Braille Cells button
 		b1 = new JButton("Edit Braille Cells (READ DOCUMENTATION!)");
 		b1.setForeground(Color.BLACK);
 		b1.setBackground(Color.WHITE);
@@ -65,6 +74,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		b1.setBounds(64, 62, 292, 40);
 		contentPane.add(b1);
 
+		//Set number of Buttons Button
 		b2 = new JButton("Set Number of Buttons\r\n");
 		b2.setBackground(Color.WHITE);
 		b2.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -72,11 +82,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		b2.setBounds(102, 113, 231, 40);
 		contentPane.add(b2);
 
+		//JLabel Popup
 		JLabel lblNewLabel = new JLabel("How Would You Like To Edit This File?\r\n");
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
 		lblNewLabel.setBounds(54, 11, 317, 40);
 		contentPane.add(lblNewLabel);
-
+		
+		//Enter Command button
 		b3 = new JButton("Enter Command");
 		b3.setBackground(Color.WHITE);
 		b3.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -86,6 +98,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	}
 
 	public void launcher() throws IOException {
+		
 		JFileChooser chooser1 = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
 		chooser1.setFileFilter(filter);
@@ -93,10 +106,49 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
+		
+		if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
+		{
+			JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
+			this.launcher();
+		}
+		
 		filename = chooser1.getSelectedFile().getAbsolutePath();
-		x = new File(filename);
+		filePath = new File(filename);
 	}
 
+	public boolean isScenarioFile(String file)
+	{
+		String line = null;
+		
+		try {
+			FileReader filereader = new FileReader(file);
+			BufferedReader buffread = new BufferedReader(filereader);
+			
+			String line1 = buffread.readLine();
+			String line2 = buffread.readLine();
+			
+			if (line1.matches("Cell [0-9+]"))
+			{
+				buffread.close();
+				return false;
+			}
+			
+			if (line2.matches("Button [0-9+]"))
+			{
+				buffread.close();
+				return false;
+			}
+			
+			buffread.close();
+			
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return true;
+	}
+	
 	/**
 	 * The method WriteCell currently deletes all content of the current chosen
 	 * file and outputs the parameter string to the beginning of the parameter
@@ -132,6 +184,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		
 		}
 
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == b1) {
@@ -144,7 +197,11 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			else
 			{
 			try {
-				this.WriteCell("Cells "+output, x);
+
+				this.WriteCell("Cells "+output, filePath);
+
+				this.WriteCell(output, filePath);
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -156,14 +213,18 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			int intInput = Integer.valueOf(output);
 			
 			try {
+
 				if(intInput<=0)
 				{
 					throw new IllegalArgumentException("Please input  positive  integer");
 				}
 				else
 				{
-				this.WriteButton("Button "+output, x);
+				this.WriteButton("Button "+output, filePath);
 				}
+
+				this.WriteButton(output, filePath);
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
@@ -173,7 +234,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		if (e.getSource() == b3) {
 			output = JOptionPane.showInputDialog("Enter Command");
 			try {
-				this.WriteButton(output, x);
+				this.WriteButton(output, filePath);
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
