@@ -1,25 +1,23 @@
 package enamel;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.regex.Pattern;
-import java.awt.event.ActionEvent;
-import java.awt.Font;
-import java.awt.Color;
 
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener {
 
@@ -53,8 +51,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			
 			JOptionPane.showMessageDialog(null, "Select your existing file");
 			this.launcher();
-			if(!this.isScenarioFile(filename)){
-				System.exit(0);
+			while (!this.isScenarioFile(filename)){
+				this.launcher();
 			}
 			
 			fileState = false;
@@ -110,6 +108,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
+		chooser1.removeAll();
 		//
 		//if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
 		//{
@@ -126,8 +125,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 
 	public boolean isScenarioFile(String file)
 	{
-		String line = null;
-		
 		try {
 			FileReader filereader = new FileReader(file);
 			BufferedReader buffread = new BufferedReader(filereader);
@@ -144,7 +141,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			}else{
 				System.out.println("failed");
 				JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
-				this.launcher();
 				buffread.close();
 				return false;
 				
