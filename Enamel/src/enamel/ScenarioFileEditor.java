@@ -169,11 +169,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	 * @throws IOException
 	 */
 
-	public void WriteCell(String x, File f) throws IOException {
+	public void WriteCell(String inputCells, File f) throws IOException {
+		
 		FileWriter fw = new FileWriter(f);
-		fw.write(x + "\n");
+		fw.write(inputCells + "\n");
 		fw.close();
-	}
+		
+		}
 
 	/**
 	 * The method WriteButton adds to the end of the current chosen file feel
@@ -183,29 +185,56 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	 * @param f
 	 * @throws IOException
 	 */
-	public void WriteButton(String x, File f) throws IOException {
+	public void WriteButton(String inputButton, File f) throws IOException {
+		
 		FileWriter fw = new FileWriter(f, true);
 		fw.write(System.lineSeparator());
-		fw.write(x + "\n");
+		fw.write(inputButton + "\n");
 		fw.close();
-	}
+		
+		}
 
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == b1) {
-			output = "Cell " + JOptionPane.showInputDialog("Enter Number of Braille Cells (enter an integer): ");
+			output = JOptionPane.showInputDialog("Enter Number of Braille Cells (enter a positive integer): ");
+			int intCells = Integer.valueOf(output);
+			if(intCells <= 0)
+			{
+				throw new IllegalArgumentException("Please enter a positive argument");
+			}
+			else
+			{
 			try {
+
+				this.WriteCell("Cells "+output, filePath);
+
 				this.WriteCell(output, filePath);
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-
+			}
 		}
 		if (e.getSource() == b2) {
-			output = "Button " + JOptionPane.showInputDialog("Enter Number of Buttons (enter an integer): ");
+			//output = "Button " + JOptionPane.showInputDialog("Enter Number of Buttons (enter an integer): ");
+			output = JOptionPane.showInputDialog("Enter Number of Buttons (enter an integer): ");
+			int intInput = Integer.valueOf(output);
+			
 			try {
-				this.WriteButton(output, filePath);
+
+				if(intInput<=0)
+				{
+					throw new IllegalArgumentException("Please input  positive  integer");
+				}
+				else
+				{
+				this.WriteButton("Button "+output, filePath);
+				}
+
+				
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
