@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -13,11 +14,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class ToyAuthoring  extends JFrame implements ActionListener{
-	private static Component parent;
+public class ToyAuthoring //extends JFrame implements ActionListener{
+{
+private static Component parent;
 	
 	JButton yes;
     JButton no;
+    JFrame frame;
 	/**
 	 * A class to help educators load scenarios </br>
 	 * Scenarios are <code> .txt </code> files used to help teach Braille. </br>
@@ -28,14 +31,16 @@ public class ToyAuthoring  extends JFrame implements ActionListener{
 	 */
     private ToyAuthoring()
 	{
-		JFrame frame = new JFrame("Visual Impairment Status");
+    	
+	}
+		/*frame = new JFrame("Visual Impairment Status");
 		JPanel p = new JPanel();
 		p.setSize(400, 800);
 		p.setLayout(new GridLayout(2,2));
 		
 		
-		String button1Text = "Yes"; //Yes Button
-		String button2Text = "No"; //No Button
+		String button1Text = "Yes"; //Yes Button text
+		String button2Text = "No"; //No Button text
 		
 		yes = new JButton();
 		yes.setText(button1Text);
@@ -54,8 +59,7 @@ public class ToyAuthoring  extends JFrame implements ActionListener{
 		frame.setSize(300, 300);
 		yes.setSize(10,1);
 		frame.setResizable(true);
-		frame.setVisible(true);
-			
+		frame.setVisible(true); 
 	}
 	
 	public void actionPerformed(ActionEvent e)
@@ -65,12 +69,16 @@ public class ToyAuthoring  extends JFrame implements ActionListener{
 		{
 			try
 			{
+				frame.dispose();
 				launcher(true);
+				
+				
 			}
 			catch (Exception e3)
 			{
 				e3.printStackTrace();
 			}
+			
 		}
 		
 		if(source.equals(no))
@@ -84,7 +92,9 @@ public class ToyAuthoring  extends JFrame implements ActionListener{
 				e3.printStackTrace();
 			}
 		}
-	}
+		
+	} 
+	
 	
 	/**
 	 * 
@@ -102,7 +112,11 @@ public class ToyAuthoring  extends JFrame implements ActionListener{
 	 */
 	public void launcher(boolean t) throws IOException
 	{
-		ScenarioParser s = new ScenarioParser(t);
+		
+	} 
+	public static void main(String[] args) {
+		
+		ScenarioParser s = new ScenarioParser(true);
 		JFileChooser chooser1 = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Factory Scenario Files", "txt");
 		chooser1.setFileFilter(filter);
@@ -111,10 +125,6 @@ public class ToyAuthoring  extends JFrame implements ActionListener{
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 			s.setScenarioFile(chooser1.getSelectedFile().getAbsolutePath()); //uses JFileChooser to generate path of file
 		}
-	}
-	public static void main(String[] args) {
-		
-		new ToyAuthoring();
 		
 	}
 }
