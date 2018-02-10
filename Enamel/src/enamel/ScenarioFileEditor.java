@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class ScenarioFileEditor extends JFrame implements ActionListener {
+public class ScenarioFileEditor extends JFrame implements ActionListener { //view and controller
 
 	/**
 	 * 
@@ -33,6 +33,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	public JButton b3;  //
 	public File filePath; // global variable for absolute path of file
 	public boolean fileState; // true means new file, false means existing file(no use right now)
+	public boolean iscancelled;
 
 	/**
 	 * Create the frame.
@@ -46,20 +47,22 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			filename = JOptionPane.showInputDialog(this, "Type in file name:");
 			filePath = new File(filename + ".txt");
 			fileState = true;
-			
+			this.editorWindow();
 		} else if (y == JOptionPane.NO_OPTION) {
 			
 			JOptionPane.showMessageDialog(null, "Select your existing file");
 			this.launcher();
-			while (!this.isScenarioFile(filename)){
+			while (!this.isScenarioFile(filename) && this.iscancelled == false){
 				this.launcher();
+				this.editorWindow();
 			}
-			
 			fileState = false;
-			
 		} else {
 			System.exit(0); //terminate
 		}
+	}
+
+	public void editorWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -98,16 +101,25 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 		b3.setBounds(150, 174, 131, 40);
 		contentPane.add(b3);
 	}
-
+	
 	public void launcher() throws IOException {
 		
+		this.iscancelled = false;
 		JFileChooser chooser1 = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
 		chooser1.setFileFilter(filter);
 		int returnVal = chooser1.showOpenDialog(null);
+		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
+		
+		if (returnVal == JFileChooser.CANCEL_OPTION)
+		{
+			this.iscancelled = true;
+			return;
+		}
+		
 		chooser1.removeAll();
 		//
 		//if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
@@ -117,8 +129,15 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			//this.launcher();
 		//}
 		
-		filename = chooser1.getSelectedFile().getAbsolutePath();
-		filePath = new File(filename);
+		try
+		{
+			filename = chooser1.getSelectedFile().getAbsolutePath();
+			filePath = new File(filename);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 	
 	
@@ -150,9 +169,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			
 		} catch (Exception e)
 		{
-			e.printStackTrace();
+			//e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 	
 	/**
@@ -182,12 +201,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 	 * @throws IOException
 	 */
 	public void WriteButton(String inputButton, File f) throws IOException {
-		
 		FileWriter fw = new FileWriter(f, true);
 		fw.write(System.lineSeparator());
 		fw.write(inputButton + "\n");
 		fw.close();
-		
 		}
 
 	
