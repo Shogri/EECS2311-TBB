@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -294,13 +295,51 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		
 		if (e.getSource().equals(this.button_save_scenario))
 		{
-			
+			JFileChooser fileSaver = new JFileChooser();
+			//JFileChooser chooser1 = new JFileChooser();
+			//FileNameExtensionFilter filter = new FileNameExtensionFilter("Factory Scenario Files", "txt");
+			//chooser1.setFileFilter(filter);
+			int returnVal = fileSaver.showSaveDialog(ScenarioFileEditor.this);
+			if(returnVal == JFileChooser.APPROVE_OPTION)
+			{
+				String writtenStuff = mainTextArea.getText();
+				System.out.println(writtenStuff);
+				try {
+					FileWriter fw = new FileWriter(fileSaver.getSelectedFile()+".txt");
+					BufferedWriter bw = new BufferedWriter(fw);
+					for(String fgh : mainTextArea.getText().split("\\n"))
+					{
+						if(fgh.startsWith("Display"))
+						{ 
+							
+							bw.write("/~disp-cell-pins:"+fgh.substring(8));
+							bw.newLine();
+						}
+						
+						else if(fgh.startsWith("Reset"))
+						{
+							bw.write("/~reset-buttons");
+							bw.newLine();
+						}
+						else
+						{
+						bw.write(fgh);
+						bw.newLine();
+						}
+						}
+					 bw.close();
+			         fw.close();
+				} catch (IOException e1) {
+					
+					e1.printStackTrace();
+				}
+			}
 		}
 		
 		if (e.getSource().equals(this.button_add_field))
 		{
-			mainTextArea.append("Cells ");
-		}
+			mainTextArea.append("Cell ");
+		
 		
 		if (e.getSource().equals(this.button_edit_field))
 		{
@@ -366,4 +405,5 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		}
 		*/
 	}
+}
 }
