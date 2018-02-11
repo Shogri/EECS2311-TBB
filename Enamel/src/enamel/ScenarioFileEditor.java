@@ -18,6 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.SwingConstants;
+import javax.swing.JList;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener { //view and controller
 
@@ -28,12 +30,11 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	private JPanel contentPane; 
 	public String output; // global variable for output from GUI's
 	public String filename;
-	public JButton b1;
-	public JButton b2;
-	public JButton b3;  //
 	public File filePath; // global variable for absolute path of file
 	public boolean fileState; // true means new file, false means existing file(no use right now)
 	public boolean iscancelled;
+	private JButton btnEditExistingScenario;
+	private JButton btnEdit;
 
 	/**
 	 * Create the frame.
@@ -41,65 +42,74 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	 * @throws IOException
 	 */
 	public ScenarioFileEditor() throws IOException {
-		int y = JOptionPane.showConfirmDialog(null, "New File?");
-		if (y == JOptionPane.YES_OPTION) {
-			
-			filename = JOptionPane.showInputDialog(this, "Type in file name:");
-			filePath = new File(filename + ".txt");
-			fileState = true;
-			this.editorWindow();
-		} else if (y == JOptionPane.NO_OPTION) {
-			
-			JOptionPane.showMessageDialog(null, "Select your existing file");
-			this.launcher();
-			while (!this.isScenarioFile(filename) && this.iscancelled == false){
-				this.launcher();
-				this.editorWindow();
-			}
-			fileState = false;
-		} else {
-			System.exit(0); //terminate
-		}
+		this.editorWindow();
+		//		int y = JOptionPane.showConfirmDialog(null, "New File?");
+//		if (y == JOptionPane.YES_OPTION) {
+//			filename = JOptionPane.showInputDialog(this, "Type in file name:");
+//			filePath = new File(filename + ".txt");
+//			fileState = true;
+//			this.editorWindow();
+//		} else if (y == JOptionPane.NO_OPTION) {
+//			
+//			JOptionPane.showMessageDialog(null, "Select your existing file");
+//			this.launcher();
+//			while (!this.isScenarioFile(filename) && this.iscancelled == false){
+//				this.launcher();
+//				
+//			}
+//			fileState = false;
+//		} else {
+//			System.exit(0); //terminate
+//		}
 	}
 
 	public void editorWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 583, 357);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		//Edit Braille Cells button
-		b1 = new JButton("Edit Braille Cells (READ DOCUMENTATION!)");
-		b1.setForeground(Color.BLACK);
-		b1.setBackground(Color.WHITE);
-		b1.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		this.b1.addActionListener(this);
-		b1.setBounds(64, 62, 292, 40);
-		contentPane.add(b1);
-
-		//Set number of Buttons Button
-		b2 = new JButton("Set Number of Buttons\r\n");
-		b2.setBackground(Color.WHITE);
-		b2.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		b2.addActionListener(this);
-		b2.setBounds(102, 113, 231, 40);
-		contentPane.add(b2);
 
 		//JLabel Popup
-		JLabel lblNewLabel = new JLabel("How Would You Like To Edit This File?\r\n");
+		JLabel lblNewLabel = new JLabel("Scenario Editor\r\n");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lblNewLabel.setBounds(54, 11, 317, 40);
+		lblNewLabel.setBounds(31, 16, 161, 40);
+		lblNewLabel.setAlignmentX(CENTER_ALIGNMENT);
 		contentPane.add(lblNewLabel);
 		
-		//Enter Command button
-		b3 = new JButton("Enter Command");
-		b3.setBackground(Color.WHITE);
-		b3.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		b3.addActionListener(this);
-		b3.setBounds(150, 174, 131, 40);
-		contentPane.add(b3);
+		JList list = new JList();
+		list.setBounds(10, 67, 354, 240);
+		contentPane.add(list);
+		
+		JButton btnCreateNewScenario = new JButton("Create New Scenario");
+		btnCreateNewScenario.setBounds(216, 11, 148, 23);
+		contentPane.add(btnCreateNewScenario);
+		
+		btnEditExistingScenario = new JButton("Edit Existing Scenario");
+		btnEditExistingScenario.setBounds(216, 33, 148, 23);
+		contentPane.add(btnEditExistingScenario);
+		
+		btnEdit = new JButton("Edit Field");
+		btnEdit.setBounds(374, 99, 183, 23);
+		contentPane.add(btnEdit);
+		
+		JLabel lblSelectedScemario = new JLabel("Selected Scemario:");
+		lblSelectedScemario.setBounds(372, 16, 121, 40);
+		contentPane.add(lblSelectedScemario);
+		
+		JButton btnNewField = new JButton("Add Field");
+		btnNewField.setBounds(374, 67, 183, 23);
+		contentPane.add(btnNewField);
+		
+		JButton btnDeleteField = new JButton("Delete Field");
+		btnDeleteField.setBounds(374, 133, 183, 23);
+		contentPane.add(btnDeleteField);
+		
+		JButton btnSaveScenario = new JButton("Save Scenario");
+		btnSaveScenario.setBounds(374, 167, 183, 23);
+		contentPane.add(btnSaveScenario);
 	}
 	
 	public void launcher() throws IOException {
@@ -210,6 +220,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
+		/*
 		if (e.getSource() == b1) {
 			output = JOptionPane.showInputDialog("Enter Number of Braille Cells (enter a positive integer): ");
 			int intCells = Integer.valueOf(output);
@@ -262,6 +274,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 				e1.printStackTrace();
 			}
 		}
-
+		*/
 	}
 }
