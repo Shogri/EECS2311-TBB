@@ -1,6 +1,7 @@
 package enamel;
 
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.SwingConstants;
@@ -36,7 +38,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	public File selectedfile;
 	public String selectedfilepath;
 	// -------------- GUI fields ---------------
+	private JTextArea mainTextArea;
 	private JPanel contentPane; 
+	private JFrame frame;
 	private JButton button_create_scenario;
 	private JButton button_existing_scenario;
 	private JButton button_save_scenario;
@@ -55,7 +59,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	 * @throws IOException
 	 */
 	public ScenarioFileEditor() throws IOException {
-		this.editorWindow();
+		editorWindow();
 		//		int y = JOptionPane.showConfirmDialog(null, "New File?");
 //		if (y == JOptionPane.YES_OPTION) {
 //			filename = JOptionPane.showInputDialog(this, "Type in file name:");
@@ -77,13 +81,14 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	}
 
 	public void editorWindow() {
+		//frame = new JFrame("TreBBA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 642, 384);
+		setBounds(100, 100, 642, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+	
 		//JLabel Popup
 		label_title = new JLabel("Scenario Editor\r\n");
 		label_title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -93,9 +98,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		contentPane.add(label_title);
 		
 		//JList
-		list = new JList();
-		list.setBounds(10, 67, 374, 264);
-		contentPane.add(list);
+		//list = new JList();
+		//list.setBounds(10, 67, 374, 264);
+		//contentPane.add(list);
 		
 		//button to create a new scenario
 		button_create_scenario = new JButton("Create New Scenario");
@@ -121,7 +126,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		contentPane.add(label_selected_scenario);
 		
 		//button that adds a new field
-		button_add_field = new JButton("Add Field");
+		button_add_field = new JButton("Number of cells");
 		button_add_field.setBounds(402, 66, 183, 23);
 		contentPane.add(button_add_field);
 		button_add_field.addActionListener(this);
@@ -137,6 +142,14 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		button_save_scenario.setBounds(402, 167, 183, 23);
 		contentPane.add(button_save_scenario);
 		button_save_scenario.addActionListener(this);
+		
+		//Text Area
+		mainTextArea = new JTextArea();
+		mainTextArea.setEditable(true);
+		mainTextArea.setBounds(5, 65, 380, 300);
+		contentPane.add(mainTextArea);
+	
+		
 	}
 	
 	public void launcher() throws IOException {
@@ -248,7 +261,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		//button_edit_scenario
 		if (e.getSource().equals(this.button_existing_scenario))
 		{
-			System.out.println("yee");
+			
 			JFileChooser chooser1 = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
 			chooser1.setFileFilter(filter);
@@ -286,7 +299,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		
 		if (e.getSource().equals(this.button_add_field))
 		{
-			
+			mainTextArea.append("Cells ");
 		}
 		
 		if (e.getSource().equals(this.button_edit_field))
