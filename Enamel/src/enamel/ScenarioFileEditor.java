@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
+import javax.swing.JTabbedPane;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener { //view and controller
 
@@ -191,6 +193,20 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		
 	}
 	
+	public void FileParser(File f) throws IOException{
+		BufferedReader x = new BufferedReader(new FileReader(f));
+		while(x.readLine() != null){
+			String n = x.readLine();
+			String y = n.replaceAll("~/", "");
+			y = y.replaceAll("-", " ");	
+			y = y.replaceAll("disp", "display:");
+			y = y.replaceAll("user input", "command: user input!");
+			y = y.replaceAll("reset buttons", "command: reset!");
+			System.out.println(y);
+		}
+		x.close();
+	}
+	
 	
 
 	public boolean isScenarioFile(String file) // this may not be needed
@@ -254,6 +270,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		fw.write(inputButton + "\n");
 		fw.close();
 		}
+	
 
 	
 	@Override
