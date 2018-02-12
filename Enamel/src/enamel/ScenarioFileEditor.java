@@ -54,7 +54,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			JOptionPane.showMessageDialog(null, "Select your existing file");
 			this.launcher();
 			if(!this.isScenarioFile(filename)){
-				System.exit(0);
+				this.launcher();
+				this.isScenarioFile(filename);
 			}
 			
 			fileState = false;
@@ -144,7 +145,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener {
 			}else{
 				System.out.println("failed");
 				JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
-				this.launcher();
 				buffread.close();
 				return false;
 				
