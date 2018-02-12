@@ -49,6 +49,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	private JButton button_add_cells;
 	private JButton button_clear_cells;
 	private JButton button_sound_file;
+	private JButton button_display_cells;
 	private JLabel label_title;
 	private JLabel label_selected_scenario;
 	private JList list;
@@ -158,6 +159,12 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		button_sound_file.setBounds(402, 200, 183, 23);
 		contentPane.add(button_sound_file);
 		button_sound_file.addActionListener(this);
+		
+		//Button to Display Cells
+		button_display_cells = new JButton("Display Cells");
+		button_display_cells.setBounds(402, 233, 183, 23);
+		contentPane.add(button_display_cells);
+		button_display_cells.addActionListener(this);
 		
 	}
 	
