@@ -45,8 +45,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	private JButton button_create_scenario;
 	private JButton button_existing_scenario;
 	private JButton button_save_scenario;
-	private JButton button_edit_field;
-	private JButton button_add_field;
+	private JButton button_add_button;
+	private JButton button_add_cells;
 	private JButton button_delete_field;
 	private JLabel label_title;
 	private JLabel label_selected_scenario;
@@ -99,9 +99,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		contentPane.add(label_title);
 		
 		//JList
-		//list = new JList();
-		//list.setBounds(10, 67, 374, 264);
-		//contentPane.add(list);
+				//list = new JList();
+				//list.setBounds(10, 67, 374, 264);
+				//contentPane.add(list);
 		
 		//button to create a new scenario
 		button_create_scenario = new JButton("Create New Scenario");
@@ -115,11 +115,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		contentPane.add(button_existing_scenario);
 		button_existing_scenario.addActionListener(this);
 		
-		//Button to edit a field
-		button_edit_field = new JButton("Edit Field");
-		button_edit_field.setBounds(402, 99, 183, 23);
-		contentPane.add(button_edit_field);
-		button_edit_field.addActionListener(this);
 		
 		//label that states the selected scenario
 		label_selected_scenario = new JLabel("Selected Scenario:");
@@ -127,10 +122,17 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		contentPane.add(label_selected_scenario);
 		
 		//button that adds a new field
-		button_add_field = new JButton("Number of cells");
-		button_add_field.setBounds(402, 66, 183, 23);
-		contentPane.add(button_add_field);
-		button_add_field.addActionListener(this);
+		button_add_cells = new JButton("Number of cells");
+		button_add_cells.setBounds(402, 66, 183, 23);
+		contentPane.add(button_add_cells);
+		button_add_cells.addActionListener(this);
+		
+		//Button to edit a field
+		button_add_button = new JButton("Number of buttons");
+		button_add_button.setBounds(402, 99, 183, 23);
+		contentPane.add(button_add_button);
+		button_add_button.addActionListener(this);
+				
 		
 		//button that deletes a field
 		button_delete_field = new JButton("Delete Field");
@@ -248,13 +250,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	 * @param f
 	 * @throws IOException
 	 */
-	public void WriteButton(String inputButton, File f) throws IOException {
+	/*public void WriteButton(String inputButton, File f) throws IOException {
 		FileWriter fw = new FileWriter(f, true);
 		fw.write(System.lineSeparator());
 		fw.write(inputButton + "\n");
 		fw.close();
 		}
-
+*/
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -336,14 +338,14 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 			}
 		}
 		
-		if (e.getSource().equals(this.button_add_field))
+		if (e.getSource().equals(this.button_add_cells))
 		{
 			mainTextArea.append("Cell ");
+		}
 		
-		
-		if (e.getSource().equals(this.button_edit_field))
+		if (e.getSource().equals(this.button_add_button))
 		{
-			
+			mainTextArea.append("Button ");
 		}
 		
 		if (e.getSource().equals(this.button_delete_field))
@@ -406,4 +408,4 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		*/
 	}
 }
-}
+
