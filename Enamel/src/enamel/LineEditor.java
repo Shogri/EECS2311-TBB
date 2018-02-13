@@ -9,18 +9,10 @@ public class LineEditor { //model in the model view controller for the scenario 
 	public static void setupCellButton(File file, int cells, int buttons) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsolutePath(), false);
+		fw.write("Cell " + cells);
 		fw.write(System.lineSeparator());
-		fw.write("Cell " + cells + "\n");
-		fw.write("Button " + buttons + "\n");
+		fw.write("Button " + buttons);
 		fw.close(); 
-	}
-	
-	public static void setDisplay(File file, int cellnum, int pins) throws IOException, NumberFormatException
-	{
-		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
-		fw.write(System.lineSeparator());
-		fw.write("/~disp-cell-pins:" + cellnum + " " + pins);
-		fw.close();
 	}
 	
 	public static void addPause(File file, int timeofpause) throws IOException
