@@ -142,5 +142,44 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~disp-cell-lower:" + cellnum + " " + pinnum);
 		fw.close();
 	}
-	 
+	
+	public static void activateKeys(File file, int keyNum) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		if(keyNum == 1)
+		{
+			fw.write("/~skip-button:0 ONEE");
+			fw.close();
+		}
+		if(keyNum == 2)
+		{
+			fw.write("/~skip-button:1 TWOO");
+			fw.close();
+		}
+	}
+	
+	public static void addString(File file, String toAdd) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write(toAdd);
+		fw.close();
+		
+	}
+	
+	public static void setKey(File file, int keyNum) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		if(keyNum==1)
+		{
+		fw.write("/~ONEE");
+		}
+		if(keyNum==2)
+		{
+			fw.write("/~TWOO");
+		}
+		fw.close();
+	}
 }
