@@ -1,34 +1,31 @@
 package enamel;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.SwingConstants;
-import javax.swing.JList;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { //view and controller
 
@@ -109,7 +106,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		contentPane.add(label_title);
 		
 		list = new JList(this.listModel);
-		list.setBounds(10, 67, 374, 264);
+		list.setBounds(10, 67, 374, 358);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	    list.addListSelectionListener(this);
 	    list.setVisibleRowCount(5);
@@ -134,8 +131,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		button_edit_field.addActionListener(this);
 		
 		//label that states the selected scenario
-		label_selected_scenario = new JLabel("Selected Scenario:");
-		label_selected_scenario.setBounds(402, 16, 121, 40);
+		label_selected_scenario = new JLabel("No Selected Scenario");
+		label_selected_scenario.setHorizontalAlignment(SwingConstants.CENTER);
+		label_selected_scenario.setBounds(402, 16, 183, 40);
 		contentPane.add(label_selected_scenario);
 		
 		//button that deletes a field
@@ -253,7 +251,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.selectedfile = chooser1.getSelectedFile();
 			this.selectedfilepath = chooser1.getSelectedFile().getAbsolutePath();
-			this.label_selected_scenario.setText(chooser1.getSelectedFile().getName());
+			this.label_selected_scenario.setText("Selected Scenario: " + chooser1.getSelectedFile().getName());
 		}
 		
 		//Create a new Scenario
@@ -281,7 +279,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			{
 				e1.printStackTrace();
 			}
-			this.label_selected_scenario.setText(this.selectedfile.getName());
+			this.label_selected_scenario.setText("Selected Scenario: " + this.selectedfile.getName());
 		}
 		
 		//Save current scenario
@@ -336,20 +334,33 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			
 			if (option.equals("Display"))
 			{
-				String disp_cell_config = JOptionPane.showInputDialog(this, " Enter Braille cell number, followed by a space, "
-						+ "followed by pins that you want punched in");
-				String[] info = disp_cell_config.split(" ");
-				this.listModel.addElement(option + " cell number " + info[0] + ", With configuration " + info[1]);
+				//String disp_cell_config = JOptionPane.showInputDialog(this, " Enter Braille cell number, followed by a space, "
+					//	+ "followed by pins that you want punched in");
+				JTextField cellnums = new JTextField(5);
+			    JTextField letter = new JTextField(1);
+			    JPanel myPanel = new JPanel();
+			    myPanel.add(new JLabel("Cell number: "));
+			    myPanel.add(cellnums);
+			    myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+			    myPanel.add(new JLabel("Displayed Letter: "));
+			    myPanel.add(letter);
+
+			    int result = JOptionPane.showConfirmDialog(null, myPanel, "Display a letter", JOptionPane.OK_CANCEL_OPTION);
 				
+				BrailleCell cell = new BrailleCell();
 				try {
-					LineEditor.addDispCellPins(this.selectedfile, Integer.parseInt(info[0]), Integer.parseInt(info[1]));
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				} 
+					String pinrepresentation = cell.getPinRepresentation(letter.getText().charAt(0));
+					this.listModel.addElement(option + " cell number " + cellnums.getText() + ", displaying letter " + letter.getText());
+					LineEditor.addDispCellPins(selectedfile, Integer.parseInt(cellnums.getText()), Integer.parseInt(pinrepresentation));
+				} catch (Exception e2) {
+					e2.printStackTrace();
+				}
+				
+				
 			}
 		}
-			//append("display", disp_cell_config);
-			//this.list.add
+		//append("display", disp_cell_config);
+		//this.list.add
 		//edit selected field
 		if (e.getSource().equals(this.button_edit_field))
 		{
