@@ -182,4 +182,16 @@ public class LineEditor { //model in the model view controller for the scenario 
 		}
 		fw.close();
 	}
+
+	public static void nextQuestion(File file) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write(" ");
+		fw.write(System.lineSeparator());
+		fw.write("/~NEXTT");
+		fw.close();
+	}
+
+	
 }
