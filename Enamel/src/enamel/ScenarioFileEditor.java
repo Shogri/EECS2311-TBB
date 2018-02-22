@@ -3,9 +3,11 @@ package enamel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -28,6 +30,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { // view
 																									// and
@@ -241,12 +244,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		// edit existing scenario
-		if (e.getSource().equals(this.button_existing_scenario)) // NOTE: get
-																	// this to
-																	// check for
-																	// non-scenario
-																	// files
+		// 							----------------edit existing scenario--------------------
+		
+		if (e.getSource().equals(this.button_existing_scenario)) // NOTE: check for non scenario files
+																
 		{
 			JFileChooser chooser1 = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
@@ -274,12 +275,12 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				}
 				x.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
 
-		// Create a new Scenario
+		// 						--------------Create a new Scenario----------------
+		
 		if (e.getSource().equals(this.button_create_scenario)) {
 			// create new file
 			filename = JOptionPane.showInputDialog(this, "Type in file name:");
@@ -307,7 +308,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			this.label_selected_scenario.setText("Selected Scenario: " + this.selectedfile.getName());
 		}
 
-		// Save current scenario
+		// 								---------Save current scenario---------------
+		
 		if (e.getSource().equals(this.button_save_scenario)) {
 			if (this.filename == null) {
 				JOptionPane.showMessageDialog(null, "Error: Please select a file");
@@ -357,7 +359,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
-				} else {
+				}
 					String disp_cell_config = JOptionPane.showInputDialog(this,
 							" Enter Braille cell number, followed by a space, "
 									+ "followed by pins that you want punched in");
@@ -370,44 +372,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-				}
 			}
 		}
-		//add a field (dropdown)
-		if (e.getSource().equals(this.add_field_dropdown))
-		{
-			JComboBox cb = (JComboBox)e.getSource();
-			String option = (String)cb.getSelectedItem();
-			
-			if (option.equals("Display"))
-			{
-				//String disp_cell_config = JOptionPane.showInputDialog(this, " Enter Braille cell number, followed by a space, "
-					//	+ "followed by pins that you want punched in");
-				JTextField cellnums = new JTextField(5);
-			    JTextField letter = new JTextField(1);
-			    JPanel myPanel = new JPanel();
-			    myPanel.add(new JLabel("Cell number: "));
-			    myPanel.add(cellnums);
-			    myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-			    myPanel.add(new JLabel("Displayed Letter: "));
-			    myPanel.add(letter);
 
-			    int result = JOptionPane.showConfirmDialog(null, myPanel, "Display a letter", JOptionPane.OK_CANCEL_OPTION);
-				
-				BrailleCell cell = new BrailleCell();
-				try {
-					String pinrepresentation = cell.getPinRepresentation(letter.getText().charAt(0));
-					this.listModel.addElement(option + " cell number " + cellnums.getText() + ", displaying letter " + letter.getText());
-					LineEditor.addDispCellPins(selectedfile, Integer.parseInt(cellnums.getText()), Integer.parseInt(pinrepresentation));
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-				
-				
-			}
-		}
-		//append("display", disp_cell_config);
-		//this.list.add
 		//edit selected field
 		if (e.getSource().equals(this.button_edit_field))
 		{
@@ -428,4 +395,5 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 	}
+	
 }
