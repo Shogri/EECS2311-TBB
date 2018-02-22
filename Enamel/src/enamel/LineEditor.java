@@ -13,7 +13,17 @@ public class LineEditor { //model in the model view controller for the scenario 
 	
 	private static boolean tabbed;
 	private static String TAB = "";
-
+	/**
+	 * 
+	 * @param file
+	 * @param cells : The number of cells 
+	 * @param buttons : The number of buttons
+	 * 
+	 * Start the scenario with the specified number of cells and buttons </br>
+	 * 
+	 * @throws IOException
+	 */
+	//Tested
 	public static void setupCellButton(File file, int cells, int buttons) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsolutePath(), false);
@@ -23,6 +33,14 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.close(); 
 	}
 	
+	/**
+	 * 
+	 * @param file
+	 * @param timeofpause
+	 * @throws IOException
+	 * Method to add a pause in the scenario
+	 */
+	//Tested
 	public static void addPause(File file, int timeofpause) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -30,7 +48,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~pause:" + timeofpause);
 		fw.close();
 	}
-	
+	//Tested
 	public static void addDispString(File file, String stringtodisplay) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -38,7 +56,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~disp-string:" + stringtodisplay);
 		fw.close();
 	}
-	
+	//Tested
 	public static void addRepeat(File file) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -46,7 +64,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~repeat");
 		fw.close();
 	}
-	
+	//Tested
 	public static void addEndRepeat(File file) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -54,7 +72,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~endrepeat");
 		fw.close();
 	}
-	
+	//Tested
 	public static void addRepeatButton(File file, int numofbutton) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -62,7 +80,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~repeat-button:" + numofbutton);
 		fw.close();
 	} 
-	
+	//Tested
 	public static void addSkipButton(File file, int numofbutton, String identifier) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -70,7 +88,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~skip-button:" + numofbutton + " " + identifier);
 		fw.close();
 	}
-	
+	//Tested
 	public static void addUserInput(File file) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
