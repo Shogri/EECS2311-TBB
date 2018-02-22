@@ -72,7 +72,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	String[] addfield_selections = { "Add a field...", "Display","Add Text", "Ask Question","Specify Correct Answer Key",
 			"Begin Correct Answer Explanation","End Correct Answer Explanation","Specify Wrong Answer Key"
 			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Sound" };
-
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
