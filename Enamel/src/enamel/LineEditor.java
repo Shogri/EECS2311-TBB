@@ -217,6 +217,15 @@ public class LineEditor { //model in the model view controller for the scenario 
 		br.close();
 	}
 	
+	public static void importSound(File file, String soundName) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write("/~sound:"+soundName);
+		fw.close();
+	}
+	
+	
 	static void parseLine(String fileLine, DefaultListModel<String> listModel) throws InterruptedException {
 		// This statement checks if the key phrase /~repeat has been read. 
 		if (tabbed) {

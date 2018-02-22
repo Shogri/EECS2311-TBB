@@ -1,5 +1,6 @@
 package enamel;
 
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +38,7 @@ import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { // view
-																									// and
+	private static Component parent;																							// and
 																									// controller
 
 	/**
@@ -71,7 +72,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 	String[] addfield_selections = { "Add a field...", "Display","Add Text", "Ask Question","Specify Correct Answer Key",
 			"Begin Correct Answer Explanation","End Correct Answer Explanation","Specify Wrong Answer Key"
-			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Sound" };
+			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Import Sound File" };
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -486,6 +487,58 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
+					}
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Specify Correct Answer Key")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String wrong_key = JOptionPane.showInputDialog(this, "What key does the user need to press for the correct answer?");
+					if(wrong_key == null)
+					{
+						return;
+					}
+					else
+					{
+						this.listModel.addElement("Correct Answer: "+wrong_key);
+					try {
+						LineEditor.setKey(this.selectedfile, Integer.valueOf(wrong_key));
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					}
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Import Sound File")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					JFileChooser soundChooser = new JFileChooser();
+					FileNameExtensionFilter soundFilter = new FileNameExtensionFilter("Sound file", "wav");
+					soundChooser.setFileFilter(soundFilter);
+					int returnval = soundChooser.showOpenDialog(parent);
+					if(returnval == JFileChooser.APPROVE_OPTION)
+					{
+						String soundName = soundChooser.getSelectedFile().getName();
+						this.listModel.addElement("Sound file: "+soundName);
+						try {
+							LineEditor.importSound(this.selectedfile, soundName);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}
