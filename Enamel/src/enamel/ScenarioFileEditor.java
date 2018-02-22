@@ -645,27 +645,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				}
 			}
 		}
-		if (e.getSource().equals(this.add_field_dropdown)) {
-			JComboBox cb = (JComboBox) e.getSource();
-			String option = (String) cb.getSelectedItem();
-
-			if (option.equals("End Wrong Answer Explanation")) {
-				if (this.filename == null) {
-					JOptionPane.showMessageDialog(null, "Error: Please select a file");
-					return;
-				} else {
-					this.listModel.addElement("Wrong answer explanation ends here");
-					try {
-						LineEditor.addSkip(this.selectedfile, "NEXTT");
-						LineEditor.nextQuestion(this.selectedfile);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-					
-					
-				}
-			}
-		}
 		// append("display", disp_cell_config);
 		// this.list.add
 		// edit selected field
