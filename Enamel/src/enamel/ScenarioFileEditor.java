@@ -114,7 +114,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		setResizable(true);
+		setSize(800, 500);
 		// JLabel Popup
 		label_title = new JLabel("Scenario Editor\r\n");
 		label_title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -124,13 +125,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		contentPane.add(label_title);
 		
 
-		//scrollPane = new JScrollPane();
-		//scrollPane.setBounds(10, 67, 374, 264);
-		//contentPane.add(scrollPane);
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 67, 500, 264);
+		contentPane.add(scrollPane);
 
 		
 		list = new JList(this.listModel);
-		list.setBounds(10, 67, 374, 358);
+		list.setBounds(10, 67, 500, 264);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 	    list.addListSelectionListener(this);
 	    list.setVisibleRowCount(5);
@@ -141,7 +142,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		//contentPane.add(scrollPane);
 		
 		list = new JList(this.listModel);
-		//scrollPane.setViewportView(list);
+		scrollPane.setViewportView(list);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(this);
 
@@ -159,7 +160,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 		// Button to edit a field
 		button_edit_field = new JButton("Edit Field");
-		button_edit_field.setBounds(402, 99, 214, 23);
+		button_edit_field.setBounds(550, 99, 214, 23);
 		contentPane.add(button_edit_field);
 		button_edit_field.addActionListener(this);
 
@@ -176,20 +177,20 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 		// button that deletes a field
 		button_delete_field = new JButton("Delete Field");
-		button_delete_field.setBounds(402, 132, 214, 23);
+		button_delete_field.setBounds(550, 132, 214, 23);
 		contentPane.add(button_delete_field);
 		button_delete_field.addActionListener(this);
 
 		// button that saves the current scenario
 		button_save_scenario = new JButton("Save Scenario");
-		button_save_scenario.setBounds(402, 167, 214, 23);
+		button_save_scenario.setBounds(550, 167, 214, 23);
 		contentPane.add(button_save_scenario);
 		button_save_scenario.addActionListener(this);
 
 		// combo box dropdown for adding fields
 		add_field_dropdown = new JComboBox(this.addfield_selections);
 		add_field_dropdown.setToolTipText("Add a field...");
-		add_field_dropdown.setBounds(402, 65, 214, 20);
+		add_field_dropdown.setBounds(550, 65, 214, 20);
 		contentPane.add(add_field_dropdown);
 		add_field_dropdown.addActionListener(this);
 	}
@@ -533,7 +534,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					if(returnval == JFileChooser.APPROVE_OPTION)
 					{
 						String soundName = soundChooser.getSelectedFile().getName();
-						this.listModel.addElement("Sound file: "+soundName);
+						this.listModel.addElement("Playing Sound: "+soundName);
 						try {
 							LineEditor.importSound(this.selectedfile, soundName);
 						} catch (Exception e1) {
