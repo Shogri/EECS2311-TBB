@@ -1,5 +1,6 @@
 package enamel;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -142,5 +143,92 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~disp-cell-lower:" + cellnum + " " + pinnum);
 		fw.close();
 	}
-	 
+	
+	public static void activateKeys(File file, int keyNum) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		if(keyNum == 1)
+		{
+			fw.write("/~skip-button:0 ONEE");
+			fw.close();
+		}
+		if(keyNum == 2)
+		{
+			fw.write("/~skip-button:1 TWOO");
+			fw.close();
+		}
+	}
+	
+	public static void addString(File file, String toAdd) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write(toAdd);
+		fw.close();
+		
+	}
+	
+	public static void setKey(File file, int keyNum) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		if(keyNum==1)
+		{
+		fw.write("/~ONEE");
+		}
+		if(keyNum==2)
+		{
+			fw.write("/~TWOO");
+		}
+		fw.close();
+	}
+
+	public static void nextQuestion(File file) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write(" ");
+		fw.write(System.lineSeparator());
+		fw.write("/~NEXTT");
+		fw.close();
+	}
+	
+	
+	public static void addTrueFalseQuestion(File file, char x) throws IOException{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		BufferedWriter bw = new BufferedWriter(fw);
+		bw.write("/~pause:1");
+		bw.newLine();
+		bw.write("/~disp-cell-clear:0");
+		bw.newLine();
+		bw.write("/~disp-string:" + x);
+		bw.newLine();
+		bw.write("Is the Braille Cell displaying the letter " + x + "?");
+		bw.newLine();
+		bw.write("Press the button 1 for true, the button 2 for false.");
+		bw.newLine();
+		bw.write("/~skip-button:0 ONEE");
+		bw.newLine();
+		bw.write("/~skip-button:1 TWOO");
+		bw.newLine();
+		bw.write("/~user-input");
+		bw.newLine();
+		bw.write("/~ONEE");
+		bw.newLine();
+		bw.write("/~sound:correct.wav");
+		bw.newLine();
+		bw.write("That's correct! The letter displayed on the cell was " + x + ".");
+		bw.newLine();
+		bw.write("/~TWOO");
+		bw.newLine();
+		bw.write("/~sound:wrong.wav");
+		bw.newLine();
+		bw.write("Sorry! That's incorrect. The cell is displaying the character " + x + ".");
+		bw.newLine();
+		bw.write("/~skip:NEXTT");
+		bw.close();
+	}
+
+	
 }

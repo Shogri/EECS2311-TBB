@@ -66,7 +66,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	private JLabel label_selected_scenario;
 	private JList list;
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
-	String[] addfield_selections = { "Add a field...", "Display", "User Input", "Sound", "True/False Question" };
+	String[] addfield_selections = { "Add a field...", "Display", "User Input", "Sound", "True/False Question",
+	"Add Text", "Ask Question","Specify Correct Answer Key",
+			"Begin Correct Answer Explanation","End Correct Answer Explanation","Specify Wrong Answer Key"
+			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Sound" };
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -147,6 +150,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		label_selected_scenario = new JLabel("Selected Scenario:");
 		label_selected_scenario.setBounds(402, 16, 121, 40);
 		contentPane.add(label_selected_scenario);
+		
+		label_selected_scenario = new JLabel("No Selected Scenario");
+		label_selected_scenario.setHorizontalAlignment(SwingConstants.CENTER);
+		label_selected_scenario.setBounds(402, 16, 183, 40);
 
 		// button that deletes a field
 		button_delete_field = new JButton("Delete Field");
@@ -422,6 +429,51 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
+			if (option.equals("Ask Question")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String disp_cell_config = JOptionPane.showInputDialog(this, "Enter Question");
+					if (disp_cell_config == null) {
+						return;
+					} else {
+						this.listModel.addElement(disp_cell_config);
+						try
+						{
+							LineEditor.addString(this.selectedfile, disp_cell_config);
+						}
+						
+						catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+					String cellsToActivate = JOptionPane.showInputDialog(this, "Enter the keys you'd like to activate"
+							+ ", separated by a comma");
+					if(cellsToActivate == null)
+					{
+						return;
+					}
+					else
+					{
+						String[] AcKeys = cellsToActivate.split(",");
+						try
+						{
+							LineEditor.activateKeys(this.selectedfile, Integer.valueOf(AcKeys[0]) );
+							LineEditor.activateKeys(this.selectedfile, Integer.valueOf(AcKeys[1]));
+							LineEditor.addUserInput(this.selectedfile);
+						}
+						catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
 			if (option.equals("True/False Question")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
@@ -433,6 +485,132 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					        choices, // Array of choices
 					        choices[0]); // Initial choice
 					this.listModel.addElement("Question: Is the letter displayed: " + input + "?");
+				}
+			}
+		}
+		
+				if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Specify Wrong Answer Key")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String wrong_key = JOptionPane.showInputDialog(this, "What key does the user need to press for the wrong answer?");
+					if(wrong_key == null)
+					{
+						return;
+					}
+					else
+					{
+						this.listModel.addElement("Wrong Answer: "+wrong_key);
+					try {
+						LineEditor.setKey(this.selectedfile, Integer.valueOf(wrong_key));
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					}
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Add Text")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String addText = JOptionPane.showInputDialog(this, "Please enter the text that you would like to be read out");
+					if(addText == null)
+					{
+						return;
+					}
+					else
+					{
+						this.listModel.addElement(addText);
+					try {
+						LineEditor.addString(this.selectedfile, addText);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					}
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Begin Correct Answer Explanation")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					
+						this.listModel.addElement("Correct answer explanation starts here");
+					
+					
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("End Correct Answer Explanation")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					this.listModel.addElement("Correct answer explanation ends here");
+					try {
+						LineEditor.addSkip(this.selectedfile, "NEXTT");
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					
+					
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Begin Wrong Answer Explanation")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					
+						this.listModel.addElement("Wrong answer explanation starts here");
+					
+					
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("End Wrong Answer Explanation")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					this.listModel.addElement("Wrong answer explanation ends here");
+					try {
+						LineEditor.addSkip(this.selectedfile, "NEXTT");
+						LineEditor.nextQuestion(this.selectedfile);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					
+					
 				}
 			}
 		}
