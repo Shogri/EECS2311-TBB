@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -65,7 +66,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	private JLabel label_selected_scenario;
 	private JList list;
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
-	String[] addfield_selections = { "Add a field...", "Display", "User Input", "Sound" };
+	String[] addfield_selections = { "Add a field...", "Display", "User Input", "Sound", "True/False Question" };
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -114,15 +115,15 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		label_title.setBounds(31, 16, 161, 40);
 		label_title.setAlignmentX(CENTER_ALIGNMENT);
 		contentPane.add(label_title);
-		
+
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 67, 374, 264);
 		contentPane.add(scrollPane);
-		
-				list = new JList(this.listModel);
-				scrollPane.setViewportView(list);
-				list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-				list.addListSelectionListener(this);
+
+		list = new JList(this.listModel);
+		scrollPane.setViewportView(list);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.addListSelectionListener(this);
 
 		// button to create a new scenario
 		button_create_scenario = new JButton("Create New Scenario");
@@ -232,6 +233,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		fw.close();
 	}
 
+	public void WriteText(String input, File f) throws IOException {
+		FileWriter fw = new FileWriter(f, true);
+		fw.write(System.lineSeparator());
+		fw.write(input);
+		fw.close();
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
@@ -260,6 +268,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.selectedfile = chooser1.getSelectedFile();
 			this.selectedfilepath = chooser1.getSelectedFile().getAbsolutePath();
+			this.filename = chooser1.getSelectedFile().getAbsolutePath();
 			this.label_selected_scenario.setText(chooser1.getSelectedFile().getName());
 			try {
 				BufferedReader x = new BufferedReader(new FileReader(chooser1.getSelectedFile()));
@@ -306,42 +315,84 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			if (this.filename == null) {
 				JOptionPane.showMessageDialog(null, "Error: Please select a file");
 			} else {
-				JFileChooser fileSaver = new JFileChooser();
+				//JFileChooser fileSaver = new JFileChooser();
 				// JFileChooser chooser1 = new JFileChooser();
 				// FileNameExtensionFilter filter = new
 				// FileNameExtensionFilter("Factory Scenario Files", "txt");
 				// chooser1.setFileFilter(filter);
-				int returnVal = fileSaver.showSaveDialog(ScenarioFileEditor.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					String writtenStuff = mainTextArea.getText();
-					System.out.println(writtenStuff);
+				//int returnVal = fileSaver.showSaveDialog(ScenarioFileEditor.this);
+				//if (returnVal == JFileChooser.APPROVE_OPTION) {
+					//String writtenStuff = this.listModel.getElementAt(1);
+					//System.out.println(writtenStuff);
 					try {
-						FileWriter fw = new FileWriter(fileSaver.getSelectedFile() + ".txt");
+						FileWriter fw = new FileWriter((this.selectedfile));
 						BufferedWriter bw = new BufferedWriter(fw);
-						for (String fgh : mainTextArea.getText().split("\\n")) {
-							if (fgh.startsWith("Display")) {
-
-								bw.write("/~disp-cell-pins:" + fgh.substring(8));
-								bw.newLine();
-							}
-
-							else if (fgh.startsWith("Reset")) {
-								bw.write("/~reset-buttons");
-								bw.newLine();
-							} else {
+						for (int i = 0; i < this.listModel.size(); i++) {
+							String fgh = this.listModel.getElementAt(i);
+							
+							if (fgh.startsWith("Cell:")){
 								bw.write(fgh);
 								bw.newLine();
 							}
+							if(fgh.startsWith("Button:")){
+								bw.write(fgh);
+								bw.newLine();
+								bw.newLine();
+							}
+							
+							if (fgh.startsWith("Display")) {
+								bw.write("/~disp-cell-pins:" + fgh.substring(8));
+								bw.newLine();
+							}
+							if (fgh.startsWith("Reset")) {
+								bw.write("/~reset-buttons");
+								bw.newLine();
+							}
+							if(fgh.startsWith("Question:")){
+								bw.write("/~pause:1");
+								bw.newLine();
+								bw.write("/~disp-cell-clear:0");
+								bw.newLine();
+								bw.write("/~disp-string:" + fgh.charAt(fgh.length() - 2));
+								bw.newLine();
+								bw.write("Is the Braille Cell displaying the letter " + fgh.charAt(fgh.length() - 2) + "?");
+								bw.newLine();
+								bw.write("Press the button 1 for true, the button 2 for false.");
+								bw.newLine();
+								bw.write("/~skip-button:0 ONEE");
+								bw.newLine();
+								bw.write("/~skip-button:1 TWOO");
+								bw.newLine();
+								bw.write("/~user-input");
+								bw.newLine();
+								bw.write("/~ONEE");
+								bw.newLine();
+								bw.write("/~sound:correct.wav");
+								bw.newLine();
+								bw.write("That's correct! The letter displayed on the cell was " + fgh.charAt(fgh.length() - 2) + ".");
+								bw.newLine();
+								bw.write("/~TWOO");
+								bw.newLine();
+								bw.write("/~sound:wrong.wav");
+								bw.newLine();
+								bw.write("Sorry! That's incorrect. The cell is displaying the character " + fgh.charAt(fgh.length() - 2) + ".");
+								bw.newLine();
+								bw.write("/~skip:NEXTT");
+								
+								System.out.println("works");
+							}
+							System.out.println(fgh);
 						}
 						bw.close();
 						fw.close();
-					} catch (IOException e1) {
+					}
+					 catch (IOException e1) {
 
 						e1.printStackTrace();
 					}
 				}
 			}
-		}
+		
 		// add a field (dropdown)
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -371,17 +422,17 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("User Input")) {
+			if (option.equals("True/False Question")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
 				} else {
-					String disp_cell_config = JOptionPane.showInputDialog(this, "Enter Question");
-					if (disp_cell_config == null) {
-						return;
-					} else {
-						this.listModel.addElement(disp_cell_config);
-					}
+					String[] choices = { "A", "B", "C", "D", "E", "F" ,"G", "H", "I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
+					String input = (String) JOptionPane.showInputDialog(null, "Choose Letter To Display",
+					        "True False Question", JOptionPane.QUESTION_MESSAGE, null, // Use                                              // icon
+					        choices, // Array of choices
+					        choices[0]); // Initial choice
+					this.listModel.addElement("Question: Is the letter displayed: " + input + "?");
 				}
 			}
 		}
@@ -398,9 +449,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				int selected = this.list.getSelectedIndex();
 				System.out.println(selected);
 				this.listModel.remove(selected);
-			}
+				}
 		}
-	}
+			
+		}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
