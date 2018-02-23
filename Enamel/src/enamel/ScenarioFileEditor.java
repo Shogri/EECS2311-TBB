@@ -689,11 +689,12 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	{
 		if (!this.isSaved)
 		{
-			this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+			//this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
 			//this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
-			this.finalfile = new File(this.filename);
+			this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+			this.finalfile = new File(this.filename+".txt");
 			this.finalfilepath = finalfile.getAbsolutePath();
-			System.out.println("Final File: " + finalfile + " Selected file: " + selectedfile);
+			System.out.println("Final File: " + this.finalfile + " Selected file: " + selectedfile);
 			Files.copy(this.selectedfile.toPath(), this.finalfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 			this.isSaved = true;
 		}
