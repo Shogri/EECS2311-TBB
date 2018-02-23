@@ -65,6 +65,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	private JButton button_save_scenario;
 	private JButton button_edit_field;
 	private JButton button_delete_field;
+	private JButton button_play_file;
 	private JLabel label_title;
 	private JLabel label_selected_scenario;
 	private JList list;
@@ -192,6 +193,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		add_field_dropdown.setToolTipText("Add a field...");
 		add_field_dropdown.setBounds(550, 65, 214, 20);
 		contentPane.add(add_field_dropdown);
+		
+		// play current file button
+		button_play_file = new JButton("Play Current File ");
+		button_play_file.addActionListener(this);
+		button_play_file.setBounds(550, 201, 214, 23);
+		contentPane.add(button_play_file);
+		
 		add_field_dropdown.addActionListener(this);
 	}
 
@@ -656,11 +664,20 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				this.listModel.remove(selected);
 			}
 		}
+		if (e.getSource().equals(this.button_play_file)){
+			Thread starterCodeThread = new Thread("Starter Code Thread") {
+			    public void run(){    
+			        ScenarioParser s = new ScenarioParser(true);
+			        s.setScenarioFile(selectedfilepath);
+			    }
+			};
+			starterCodeThread.start();
 		}
+		}
+
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 	}
-	
 }
