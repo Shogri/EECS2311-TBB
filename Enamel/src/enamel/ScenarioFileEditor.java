@@ -333,6 +333,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				e1.printStackTrace();
 			}
 			this.label_selected_scenario.setText("Selected Scenario: " + this.selectedfile.getName());
+			this.isSaved = false;
 		}
 
 		// 								---------Save current scenario---------------
@@ -358,6 +359,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		// add a field (dropdown)
 
 		if (e.getSource().equals(this.add_field_dropdown)) {
+			this.isSaved = false;
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
@@ -439,6 +441,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					}
 				}
 			}
+			this.isSaved = false;
 		}
 			
 
@@ -446,7 +449,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		if (e.getSource().equals(this.button_edit_field))
 		{
 			
-
+			this.isSaved = false;
 		}
 
 		if (e.getSource().equals(this.add_field_dropdown)) {
@@ -474,7 +477,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					}
 				}
 			}
+			this.isSaved = false;
 		}
+		
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -500,6 +505,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					}
 				}
 			}
+			this.isSaved = false;
 		}
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -526,6 +532,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					}
 				}
 			}
+			this.isSaved = false;
 		}
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -552,6 +559,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					}
 				}
 			}
+			this.isSaved = false;
 		}
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -568,6 +576,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					
 				}
 			}
+			this.isSaved = false;
 		}
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -588,6 +597,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					
 				}
 			}
+			this.isSaved = false;
 		}
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -601,6 +611,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 						this.listModel.addElement("Wrong answer explanation starts here");
 				}
 			}
+			this.isSaved = false;
 		}
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -622,12 +633,14 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					
 				}
 			}
+			this.isSaved = false;
 		}
 		// append("display", disp_cell_config);
 		// this.list.add
 		// edit selected field
 		if (e.getSource().equals(this.button_edit_field)) {
-
+			
+			this.isSaved = false;
 		}
 
 
@@ -638,6 +651,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				System.out.println(selected);
 				this.listModel.remove(selected);
 			}
+			this.isSaved = false;
 		}
 		if (e.getSource().equals(this.button_play_file)){
 			Thread starterCodeThread = new Thread("Starter Code Thread") {
@@ -673,10 +687,16 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	
 	private void saveFile() throws IOException
 	{
-		this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
-		this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
-		this.finalfilepath = finalfile.getAbsolutePath();
-		Files.copy(this.selectedfile.toPath(), this.finalfile.toPath());
+		if (!this.isSaved)
+		{
+			this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+			//this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
+			this.finalfile = new File(this.filename);
+			this.finalfilepath = finalfile.getAbsolutePath();
+			System.out.println("Final File: " + finalfile + " Selected file: " + selectedfile);
+			Files.copy(this.selectedfile.toPath(), this.finalfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			this.isSaved = true;
+		}
 	}
 	
 	private void deleteTmpFile()
