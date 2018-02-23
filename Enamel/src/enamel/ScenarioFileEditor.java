@@ -257,6 +257,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 																	// non-scenario
 																	// files
 		{
+			this.listModel.clear();
 			JFileChooser chooser1 = new JFileChooser();
 			FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
 			chooser1.setFileFilter(filter);
