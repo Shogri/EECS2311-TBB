@@ -15,7 +15,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -28,17 +29,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
-import com.sun.speech.freetts.Voice;
-import com.sun.speech.freetts.VoiceManager;
-
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
 
@@ -49,12 +46,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.FocusEvent;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { // view
-	private static Component parent; // and
-	// controller
-
-	/**
-	 * 
-	 */
+	private static Component parent;
 	private static final long serialVersionUID = 1L;
 
 	public String output; // global variable for output from GUI's
@@ -89,9 +81,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
-	private Voice voice;
-	private VoiceManager vm;
-
 	/**
 	 * Create the frame.
 	 * 
