@@ -160,7 +160,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~disp-cell-raise:" + cellnum + " " + pinnum);
 		fw.close();
 	}
-	
+	//Tested
 	public static void addDispCellLower(File file, int cellnum, int pinnum) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -168,7 +168,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~disp-cell-lower:" + cellnum + " " + pinnum);
 		fw.close();
 	}
-	
+	//Tested
 	public static void activateKeys(File file, int keyNum) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -184,16 +184,16 @@ public class LineEditor { //model in the model view controller for the scenario 
 			fw.close();
 		}
 	}
-	
+	//Tested
 	public static void addString(File file, String toAdd) throws IOException
 	{
-		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		FileWriter fw = new FileWriter(file.getAbsolutePath(), true);
 		fw.write(System.lineSeparator());
 		fw.write(toAdd);
 		fw.close();
 		
 	}
-	
+	//Tested
 	public static void setKey(File file, int keyNum) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -208,12 +208,12 @@ public class LineEditor { //model in the model view controller for the scenario 
 		}
 		fw.close();
 	}
-
+	//Tested
 	public static void nextQuestion(File file) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 		fw.write(System.lineSeparator());
-		fw.write(" ");
+		fw.write("");
 		fw.write(System.lineSeparator());
 		fw.write("/~NEXTT");
 		fw.close();
@@ -234,7 +234,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		
 		br.close();
 	}
-	
+	//Tested
 	public static void importSound(File file, String soundName) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);

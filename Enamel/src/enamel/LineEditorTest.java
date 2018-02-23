@@ -723,8 +723,247 @@ public class LineEditorTest {
 		PrintWriter writer = new PrintWriter(file);
 		writer.print("");
 		writer.close();
+	}
+	
+	//Test 39
+	@Test
+	public void testactivateKeys1() throws IOException
+	{
+		LineEditor.activateKeys(file, 1);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~skip-button:"))
+		       {
+		    	   assertEquals("/~skip-button:0 ONEE", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
 		
 	}
+	//Test 40
+	@Test
+	public void testactivateKeys2() throws IOException
+	{
+		LineEditor.activateKeys(file, 2);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~skip-button:"))
+		       {
+		    	   assertEquals("/~skip-button:1 TWOO", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	//Test 41
+	@Test
+	public void testactivateKeys3() throws IOException
+	{
+		LineEditor.activateKeys(file, 1);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~skip-button:"))
+		       {
+		    	   assertNotEquals("/~skip-button:1 TWOO", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test 42
+	@Test
+	public void testactivateKeys4() throws IOException
+	{
+		LineEditor.activateKeys(file, 2);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~skip-button:"))
+		       {
+		    	   assertNotEquals("/~skip-button:0 ONEE", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test 43
+	@Test
+	public void testAddString1() throws IOException
+	{
+		LineEditor.addString(file, "Test addition");
+		
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty() != true)
+		       {
+		    	   assertEquals("Test addition", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test 44
+	@Test
+	public void testAddString2() throws IOException
+	{
+		LineEditor.addString(file, "");
+		
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty())
+		       {
+		    	   assertNotEquals("Test addition", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test 45
+	@Test
+	public void testsetKey1() throws IOException
+	{
+		LineEditor.setKey(file,1);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty() != true)
+		       {
+		    	   assertEquals("/~ONEE", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test 46
+	@Test
+	public void testsetKey2() throws IOException
+	{
+		LineEditor.setKey(file,2);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty() != true)
+		       {
+		    	   assertEquals("/~TWOO", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test47
+	@Test
+	public void testnextQuestion() throws IOException
+	{
+		LineEditor.nextQuestion(file);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty() != true)
+		       {
+		    	   assertEquals("/~NEXTT", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test 48
+	@Test
+	public void testimportSound1() throws IOException
+	{
+		LineEditor.importSound(file, "testSound.wav");
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty() != true)
+		       {
+		    	   assertEquals("/~sound:testSound.wav", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test 49
+	@Test
+	public void testImportSound2() throws IOException
+	{
+		LineEditor.importSound(file, "testSound");
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty() != true)
+		       {
+		    	   assertNotEquals("/~sound:testSound.wav", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test 50
+	@Test
+	public void testimportSound3() throws IOException
+	{
+		LineEditor.importSound(file, "testSound.wav");
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.isEmpty() != true)
+		       {
+		    	   assertNotEquals("/~sound:testSound", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
 	
 	
 }
