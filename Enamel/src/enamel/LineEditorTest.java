@@ -458,6 +458,275 @@ public class LineEditorTest {
 		
 	}
 	
+	//Test 25
+	@Test
+	public void testaddSkip1() throws IOException
+	{
+		LineEditor.addSkip(file, "identifier");
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~skip:"))
+		       {
+		    	   assertEquals("/~skip:identifier", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	//Test 26
+	@Test
+	public void testaddSkip2() throws IOException
+	{
+		LineEditor.addSkip(file, "identifier");
+		
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~skip:"))
+		       {
+		    	   assertNotEquals("/~skip: identifier", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test 27
+	@Test
+	public void testaddDispClearAll1() throws IOException
+	{
+		LineEditor.addDispClearAll(file);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-clearAll"))
+		       {
+		    	   assertEquals("/~disp-clearAll", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	//Test 28
+	@Test
+	public void testaddDispClearAll2() throws IOException
+	{
+		LineEditor.addDispClearAll(file);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-clearAll"))
+		       {
+		    	   assertNotEquals("/~disp-clearAll ", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	//Test 29
+	@Test
+	public void testaddDispClearCell1() throws IOException
+	{
+		LineEditor.addDispClearCell(file, 4);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-clear-cell:"))
+		       {
+		    	   assertEquals("/~disp-clear-cell:4", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	//Test 30
+	@Test
+	public void testaddDispClearCell2() throws IOException
+	{
+		LineEditor.addDispClearCell(file, 4);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-clear-cell:"))
+		       {
+		    	   assertNotEquals("/~disp-clear-cell: 4", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test 31
+	@Test
+	public void testaddDispCellPins1() throws IOException
+	{
+		LineEditor.addDispCellPins(file, 1, 11100000);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-pins:"))
+		       {
+		    	   assertEquals("/~disp-cell-pins:1 11100000", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test32
+	@Test
+	public void testaddDispCellPins2() throws IOException
+	{
+		LineEditor.addDispCellPins(file, 1, 11100000);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-pins:"))
+		       {
+		    	   assertNotEquals("/~disp-cell-pins:111100000", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test33
+	@Test
+	public void testaddDispCellChar1() throws IOException
+	{
+		LineEditor.addDispCellChar(file, 1, "a");
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-char:"))
+		       {
+		    	   assertEquals("/~disp-cell-char:1 a", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	//Test34
+	@Test
+	public void testaddDispCellChar2() throws IOException
+	{
+		LineEditor.addDispCellChar(file, 1, "a");
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-char:"))
+		       {
+		    	   assertNotEquals("/~disp-cell-char:1a", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	//Test35
+	@Test
+	public void testaddDispCellRaise1() throws IOException
+	{
+		LineEditor.addDispCellRaise(file, 1, 2);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-raise:"))
+		       {
+		    	   assertEquals("/~disp-cell-raise:1 2", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test 36
+	@Test
+	public void testaddDispCellRaise2() throws IOException
+	{
+		LineEditor.addDispCellRaise(file, 1, 2);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-raise:"))
+		       {
+		    	   assertNotEquals("/~disp-cell-raise: 1 2", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+	}
+	
+	//Test 37
+	@Test
+	public void testaddDispCellLower1() throws IOException
+	{
+		LineEditor.addDispCellLower(file, 1, 2);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-lower:"))
+		       {
+		    	   assertEquals("/~disp-cell-lower:1 2", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	//Test 38
+	@Test
+	public void testaddDispCellLower2() throws IOException
+	{
+		LineEditor.addDispCellLower(file, 1, 2);
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+		    String line;
+		    while ((line = br.readLine()) != null) {
+		       if(line.startsWith("/~disp-cell-lower:"))
+		       {
+		    	   assertNotEquals("/~disp-cell-lower: 1 2", line);
+		       }
+		    }
+		}
+		PrintWriter writer = new PrintWriter(file);
+		writer.print("");
+		writer.close();
+		
+	}
+	
+	
 }
 
 
