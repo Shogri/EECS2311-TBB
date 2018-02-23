@@ -11,6 +11,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 import javax.swing.Box;
 import javax.swing.DefaultListModel;
@@ -37,27 +39,23 @@ import javax.swing.JList;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
-public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { // view
-	private static Component parent;																							// and
-																									// controller
+public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener {
+	private static Component parent;
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public String output; // global variable for output from GUI's
 	public String filename;
 	public File filePath; // global variable for absolute path of file
 	public boolean fileState; // true means new file, false means existing
-								// file(no use right now)
 
 	public File selectedfile;
 	public String selectedfilepath;
-	public File tmpfile;
-	public String tmpfilepath;
+	
+	public File finalfile;
+	public String finalfilepath;
+	private boolean isSaved = false;
 	// -------------- GUI fields ---------------
-	private JTextArea mainTextArea;
 	private JPanel contentPane;
 	private JFrame frame;
 	private JButton button_create_scenario;
@@ -84,7 +82,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	 */
 	public ScenarioFileEditor() throws IOException {
 		setResizable(false);
-
 		editorWindow();
 		// int y = JOptionPane.showConfirmDialog(null, "New File?");
 		// if (y == JOptionPane.YES_OPTION) {
@@ -261,7 +258,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e){
 
 		// 							----------------edit existing scenario--------------------
 		
@@ -303,7 +300,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		if (e.getSource().equals(this.button_create_scenario)) {
 			// create new file
 			filename = JOptionPane.showInputDialog(this, "Type in file name:");
-			this.selectedfile = new File(filename + ".txt");
+			this.selectedfile = new File(filename + "_tmp" + ".txt");
 			this.selectedfilepath = selectedfile.getAbsolutePath();
 
 			// popup, ask for file information
@@ -333,43 +330,21 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		// 								---------Save current scenario---------------
 		
 		if (e.getSource().equals(this.button_save_scenario)) {
-			if (this.filename == null) {
+			if (this.filename == null) 
+			{
 				JOptionPane.showMessageDialog(null, "Error: Please select a file");
-			} else {
-				JFileChooser fileSaver = new JFileChooser();
-				// JFileChooser chooser1 = new JFileChooser();
-				// FileNameExtensionFilter filter = new
-				// FileNameExtensionFilter("Factory Scenario Files", "txt");
-				// chooser1.setFileFilter(filter);
-				int returnVal = fileSaver.showSaveDialog(ScenarioFileEditor.this);
-				if (returnVal == JFileChooser.APPROVE_OPTION) {
-					String writtenStuff = mainTextArea.getText();
-					System.out.println(writtenStuff);
-					try {
-						FileWriter fw = new FileWriter(fileSaver.getSelectedFile() + ".txt");
-						BufferedWriter bw = new BufferedWriter(fw);
-						for (String fgh : mainTextArea.getText().split("\\n")) {
-							if (fgh.startsWith("Display")) {
-
-								bw.write("/~disp-cell-pins:" + fgh.substring(8));
-								bw.newLine();
-							}
-
-							else if (fgh.startsWith("Reset")) {
-								bw.write("/~reset-buttons");
-								bw.newLine();
-							} else {
-								bw.write(fgh);
-								bw.newLine();
-							}
-						}
-						bw.close();
-						fw.close();
-					} catch (IOException e1) {
-
-						e1.printStackTrace();
-					}
+			} else 
+			{
+				try 
+				{
+					// TODO
+					this.saveFile();
+					this.deleteTmpFile();
+				} catch (Exception e1) 
+				{
+					e1.printStackTrace();
 				}
+				this.isSaved = true;
 			}
 		}
 		// add a field (dropdown)
@@ -646,6 +621,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		if (e.getSource().equals(this.button_edit_field)) {
 
 		}
+		
+		if (e.getSource().equals(this))
 
 		// delete selected field
 		if (e.getSource().equals(this.button_delete_field)) {
@@ -655,11 +632,45 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				this.listModel.remove(selected);
 			}
 		}
-		}
+	}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 	}
 	
+	private boolean savepopup() //true = exit without saving. false = don't do anything
+	{
+		
+		if (!this.isSaved)
+		{
+			int dialogResult;
+			dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure you would like to exit without saving?",
+					"Warning", JOptionPane.YES_NO_CANCEL_OPTION);
+			if (dialogResult == JOptionPane.YES_OPTION)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private void saveFile() throws IOException
+	{
+		this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+		this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
+		this.finalfilepath = finalfile.getAbsolutePath();
+		Files.copy(this.selectedfile.toPath(), this.finalfile.toPath());
+	}
+	
+	private void deleteTmpFile()
+	{
+		if (this.finalfile != null) //make sure there's a file that's already saved
+		{
+			this.selectedfile.delete();
+		} else
+		{
+			System.out.println("There are no other files present!");
+		}
+	}
 }
