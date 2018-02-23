@@ -1,7 +1,6 @@
 package enamel;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,28 +12,33 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.swing.Box;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import javax.swing.SwingConstants;
 import javax.swing.JList;
+
 import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { // view
-																									// and
+	private static Component parent;																							// and
 																									// controller
 
 	/**
@@ -50,7 +54,6 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 	public File selectedfile;
 	public String selectedfilepath;
-
 	public File tmpfile;
 	public String tmpfilepath;
 	// -------------- GUI fields ---------------
@@ -66,10 +69,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	private JLabel label_selected_scenario;
 	private JList list;
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
-	String[] addfield_selections = { "Add a field...", "Display", "User Input", "Sound", "True/False Question",
-	"Add Text", "Ask Question","Specify Correct Answer Key",
+
+	String[] addfield_selections = { "Add a field...", "Display","Add Text", "Ask Question","Specify Correct Answer Key",
 			"Begin Correct Answer Explanation","End Correct Answer Explanation","Specify Wrong Answer Key"
-			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Sound" };
+			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Import Sound File" };
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -80,6 +83,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	 * @throws IOException
 	 */
 	public ScenarioFileEditor() throws IOException {
+		setResizable(false);
 
 		editorWindow();
 		// int y = JOptionPane.showConfirmDialog(null, "New File?");
@@ -105,12 +109,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	public void editorWindow() {
 		// frame = new JFrame("TreBBA");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 642, 500);
+		setBounds(100, 100, 660, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		setResizable(true);
+		setSize(800, 500);
 		// JLabel Popup
 		label_title = new JLabel("Scenario Editor\r\n");
 		label_title.setHorizontalAlignment(SwingConstants.CENTER);
@@ -118,11 +123,24 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		label_title.setBounds(31, 16, 161, 40);
 		label_title.setAlignmentX(CENTER_ALIGNMENT);
 		contentPane.add(label_title);
+		
 
 		scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 67, 374, 264);
+		scrollPane.setBounds(10, 67, 500, 264);
 		contentPane.add(scrollPane);
 
+		
+		list = new JList(this.listModel);
+		list.setBounds(10, 67, 500, 264);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	    list.addListSelectionListener(this);
+	    list.setVisibleRowCount(5);
+		contentPane.add(list);
+
+		//scrollPane = new JScrollPane();
+		//scrollPane.setBounds(10, 67, 374, 264);
+		//contentPane.add(scrollPane);
+		
 		list = new JList(this.listModel);
 		scrollPane.setViewportView(list);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -136,41 +154,43 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 		// button to edit an existing scenario
 		button_existing_scenario = new JButton("Edit Existing Scenario");
-		button_existing_scenario.setBounds(216, 33, 169, 23);
+		button_existing_scenario.setBounds(216, 33, 170, 23);
 		contentPane.add(button_existing_scenario);
 		button_existing_scenario.addActionListener(this);
 
 		// Button to edit a field
 		button_edit_field = new JButton("Edit Field");
-		button_edit_field.setBounds(402, 99, 183, 23);
+		button_edit_field.setBounds(550, 99, 214, 23);
 		contentPane.add(button_edit_field);
 		button_edit_field.addActionListener(this);
 
 		// label that states the selected scenario
+
 		label_selected_scenario = new JLabel("Selected Scenario:");
 		label_selected_scenario.setBounds(402, 16, 121, 40);
-		contentPane.add(label_selected_scenario);
-		
+
 		label_selected_scenario = new JLabel("No Selected Scenario");
 		label_selected_scenario.setHorizontalAlignment(SwingConstants.CENTER);
 		label_selected_scenario.setBounds(402, 16, 183, 40);
 
+		contentPane.add(label_selected_scenario);
+
 		// button that deletes a field
 		button_delete_field = new JButton("Delete Field");
-		button_delete_field.setBounds(402, 132, 183, 23);
+		button_delete_field.setBounds(550, 132, 214, 23);
 		contentPane.add(button_delete_field);
 		button_delete_field.addActionListener(this);
 
 		// button that saves the current scenario
 		button_save_scenario = new JButton("Save Scenario");
-		button_save_scenario.setBounds(402, 167, 183, 23);
+		button_save_scenario.setBounds(550, 167, 214, 23);
 		contentPane.add(button_save_scenario);
 		button_save_scenario.addActionListener(this);
 
 		// combo box dropdown for adding fields
 		add_field_dropdown = new JComboBox(this.addfield_selections);
 		add_field_dropdown.setToolTipText("Add a field...");
-		add_field_dropdown.setBounds(402, 65, 183, 20);
+		add_field_dropdown.setBounds(550, 65, 214, 20);
 		contentPane.add(add_field_dropdown);
 		add_field_dropdown.addActionListener(this);
 	}
@@ -240,22 +260,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		fw.close();
 	}
 
-	public void WriteText(String input, File f) throws IOException {
-		FileWriter fw = new FileWriter(f, true);
-		fw.write(System.lineSeparator());
-		fw.write(input);
-		fw.close();
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		// edit existing scenario
-		if (e.getSource().equals(this.button_existing_scenario)) // NOTE: get
-																	// this to
-																	// check for
-																	// non-scenario
-																	// files
+		// 							----------------edit existing scenario--------------------
+		
+		if (e.getSource().equals(this.button_existing_scenario)) // NOTE: check for non scenario files
+																
 		{
 			this.listModel.clear();
 			JFileChooser chooser1 = new JFileChooser();
@@ -276,21 +287,20 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.selectedfile = chooser1.getSelectedFile();
 			this.selectedfilepath = chooser1.getSelectedFile().getAbsolutePath();
-			this.filename = chooser1.getSelectedFile().getAbsolutePath();
+
 			this.label_selected_scenario.setText(chooser1.getSelectedFile().getName());
+
+			this.label_selected_scenario.setText("Selected Scenario: " + chooser1.getSelectedFile().getName());
+
 			try {
-				BufferedReader x = new BufferedReader(new FileReader(chooser1.getSelectedFile()));
-				while (x.readLine() != null) {
-					this.listModel.addElement(x.readLine());
-				}
-				x.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
+				LineEditor.parseScenario(this.selectedfile, listModel);
+			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
 		}
 
-		// Create a new Scenario
+		// 						--------------Create a new Scenario----------------
+		
 		if (e.getSource().equals(this.button_create_scenario)) {
 			// create new file
 			filename = JOptionPane.showInputDialog(this, "Type in file name:");
@@ -300,6 +310,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			// popup, ask for file information
 			String new_Scenario_config = JOptionPane.showInputDialog(this,
 					" Enter Number of cells, followed by a space, " + "followed by the number of buttons");
+
+			// popup, ask for file information
+
 			if (new_Scenario_config == null) {
 				return;
 			}
@@ -315,123 +328,97 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			} catch (Exception e1) {
 				e1.printStackTrace();
 			}
-			this.label_selected_scenario.setText(this.selectedfile.getName());
+			this.label_selected_scenario.setText("Selected Scenario: " + this.selectedfile.getName());
 		}
 
-		// Save current scenario
+		// 								---------Save current scenario---------------
+		
 		if (e.getSource().equals(this.button_save_scenario)) {
 			if (this.filename == null) {
 				JOptionPane.showMessageDialog(null, "Error: Please select a file");
 			} else {
-				//JFileChooser fileSaver = new JFileChooser();
+				JFileChooser fileSaver = new JFileChooser();
 				// JFileChooser chooser1 = new JFileChooser();
 				// FileNameExtensionFilter filter = new
 				// FileNameExtensionFilter("Factory Scenario Files", "txt");
 				// chooser1.setFileFilter(filter);
-				//int returnVal = fileSaver.showSaveDialog(ScenarioFileEditor.this);
-				//if (returnVal == JFileChooser.APPROVE_OPTION) {
-					//String writtenStuff = this.listModel.getElementAt(1);
-					//System.out.println(writtenStuff);
+				int returnVal = fileSaver.showSaveDialog(ScenarioFileEditor.this);
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					String writtenStuff = mainTextArea.getText();
+					System.out.println(writtenStuff);
 					try {
-						FileWriter fw = new FileWriter((this.selectedfile));
+						FileWriter fw = new FileWriter(fileSaver.getSelectedFile() + ".txt");
 						BufferedWriter bw = new BufferedWriter(fw);
-						for (int i = 0; i < this.listModel.size(); i++) {
-							String fgh = this.listModel.getElementAt(i);
-							
-							if (fgh.startsWith("Cell:")){
-								bw.write(fgh);
-								bw.newLine();
-							}
-							if(fgh.startsWith("Button:")){
-								bw.write(fgh);
-								bw.newLine();
-								bw.newLine();
-							}
-							
+						for (String fgh : mainTextArea.getText().split("\\n")) {
 							if (fgh.startsWith("Display")) {
+
 								bw.write("/~disp-cell-pins:" + fgh.substring(8));
 								bw.newLine();
 							}
-							if (fgh.startsWith("Reset")) {
+
+							else if (fgh.startsWith("Reset")) {
 								bw.write("/~reset-buttons");
 								bw.newLine();
+							} else {
+								bw.write(fgh);
+								bw.newLine();
 							}
-							if(fgh.startsWith("Question:")){
-								bw.write("/~pause:1");
-								bw.newLine();
-								bw.write("/~disp-cell-clear:0");
-								bw.newLine();
-								bw.write("/~disp-string:" + fgh.charAt(fgh.length() - 2));
-								bw.newLine();
-								bw.write("Is the Braille Cell displaying the letter " + fgh.charAt(fgh.length() - 2) + "?");
-								bw.newLine();
-								bw.write("Press the button 1 for true, the button 2 for false.");
-								bw.newLine();
-								bw.write("/~skip-button:0 ONEE");
-								bw.newLine();
-								bw.write("/~skip-button:1 TWOO");
-								bw.newLine();
-								bw.write("/~user-input");
-								bw.newLine();
-								bw.write("/~ONEE");
-								bw.newLine();
-								bw.write("/~sound:correct.wav");
-								bw.newLine();
-								bw.write("That's correct! The letter displayed on the cell was " + fgh.charAt(fgh.length() - 2) + ".");
-								bw.newLine();
-								bw.write("/~TWOO");
-								bw.newLine();
-								bw.write("/~sound:wrong.wav");
-								bw.newLine();
-								bw.write("Sorry! That's incorrect. The cell is displaying the character " + fgh.charAt(fgh.length() - 2) + ".");
-								bw.newLine();
-								bw.write("/~skip:NEXTT");
-								
-								System.out.println("works");
-							}
-							System.out.println(fgh);
 						}
 						bw.close();
 						fw.close();
-					}
-					 catch (IOException e1) {
+					} catch (IOException e1) {
 
-						e1.printStackTrace();
-					}
-				}
-			}
-		
-		// add a field (dropdown)
-		if (e.getSource().equals(this.add_field_dropdown)) {
-			JComboBox cb = (JComboBox) e.getSource();
-			String option = (String) cb.getSelectedItem();
-
-			if (option.equals("Display")) {
-				if (this.filename == null) {
-					JOptionPane.showMessageDialog(null, "Error: Please select a file");
-					return;
-				} else {
-					String disp_cell_config = JOptionPane.showInputDialog(this,
-							" Enter Braille cell number, followed by a space, "
-									+ "followed by pins that you want punched in");
-					String[] info = disp_cell_config.split(" ");
-					this.listModel.addElement(option + " cell number " + info[0] + ", With configuration " + info[1]);
-
-					try {
-						LineEditor.addDispCellPins(this.selectedfile, Integer.parseInt(info[0]),
-								Integer.parseInt(info[1]));
-					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}
 			}
 		}
+		// add a field (dropdown)
+
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Display")) 
+			{
+				
+				if (this.selectedfile == null) 
+				{
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				}
+				 JTextField cellnum = new JTextField(1);
+				 JTextField config = new JTextField(8);
+				 JPanel myPanel = new JPanel();
+				 myPanel.add(new JLabel("Cell#"));
+				 myPanel.add(cellnum);
+				 myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				 myPanel.add(new JLabel("Letter"));
+				 myPanel.add(config);
+	
+				 int result = JOptionPane.showConfirmDialog(null, myPanel, "Please Enter Cell# and Letter to be Displayed", JOptionPane.OK_CANCEL_OPTION);
+				 if (result == JOptionPane.OK_OPTION)
+				 {
+					this.listModel.addElement(option + " cell number " + Integer.parseInt(cellnum.getText()) + 
+							 ", With configuration " + Integer.parseInt(config.getText()));
+					try 
+					{
+							LineEditor.addDispCellPins(this.selectedfile, Integer.parseInt(cellnum.getText()), 
+									Integer.parseInt(config.getText()));
+					} catch (Exception e1) 
+					{
+							e1.printStackTrace();
+					}
+				 }
+			}
+		}
+
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
 			if (option.equals("Ask Question")) {
-				if (this.filename == null) {
+				if (this.selectedfile == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
 				} else {
@@ -471,26 +458,16 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				}
 			}
 		}
-		if (e.getSource().equals(this.add_field_dropdown)) {
-			JComboBox cb = (JComboBox) e.getSource();
-			String option = (String) cb.getSelectedItem();
+			
 
-			if (option.equals("True/False Question")) {
-				if (this.filename == null) {
-					JOptionPane.showMessageDialog(null, "Error: Please select a file");
-					return;
-				} else {
-					String[] choices = { "A", "B", "C", "D", "E", "F" ,"G", "H", "I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"};
-					String input = (String) JOptionPane.showInputDialog(null, "Choose Letter To Display",
-					        "True False Question", JOptionPane.QUESTION_MESSAGE, null, // Use                                              // icon
-					        choices, // Array of choices
-					        choices[0]); // Initial choice
-					this.listModel.addElement("Question: Is the letter displayed: " + input + "?");
-				}
-			}
+		//edit selected field
+		if (e.getSource().equals(this.button_edit_field))
+		{
+			
+
 		}
-		
-				if (e.getSource().equals(this.add_field_dropdown)) {
+
+		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
@@ -512,6 +489,58 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
+					}
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Specify Correct Answer Key")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String wrong_key = JOptionPane.showInputDialog(this, "What key does the user need to press for the correct answer?");
+					if(wrong_key == null)
+					{
+						return;
+					}
+					else
+					{
+						this.listModel.addElement("Correct Answer: "+wrong_key);
+					try {
+						LineEditor.setKey(this.selectedfile, Integer.valueOf(wrong_key));
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					}
+				}
+			}
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("Import Sound File")) {
+				if (this.filename == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					JFileChooser soundChooser = new JFileChooser();
+					FileNameExtensionFilter soundFilter = new FileNameExtensionFilter("Sound file", "wav");
+					soundChooser.setFileFilter(soundFilter);
+					int returnval = soundChooser.showOpenDialog(parent);
+					if(returnval == JFileChooser.APPROVE_OPTION)
+					{
+						String soundName = soundChooser.getSelectedFile().getName();
+						this.listModel.addElement("Playing Sound: "+soundName);
+						try {
+							LineEditor.importSound(this.selectedfile, soundName);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 			}
@@ -587,10 +616,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
 				} else {
-					
 						this.listModel.addElement("Wrong answer explanation starts here");
-					
-					
 				}
 			}
 		}
@@ -628,13 +654,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				int selected = this.list.getSelectedIndex();
 				System.out.println(selected);
 				this.listModel.remove(selected);
-				}
+			}
 		}
-			
 		}
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		// TODO Auto-generated method stub
 	}
+	
 }
