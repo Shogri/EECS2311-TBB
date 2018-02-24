@@ -44,6 +44,7 @@ import javax.swing.JScrollPane;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.FocusEvent;
+import javax.swing.JToolBar;
 
 public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { // view
 	private static Component parent;
@@ -72,6 +73,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	private JLabel label_title;
 	private JLabel label_selected_scenario;
 	private JList list;
+	private JList list_1;
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 
 	String[] addfield_selections = { "Add a field...", "Display", "Add Text", "Ask Question",
@@ -140,20 +142,29 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		list.addListSelectionListener(this);
 		list.setVisibleRowCount(5);
+		list.addKeyListener(new KeyAdapter(){
+			  public void keyPressed(KeyEvent ke){
+			    if(ke.getKeyCode() == KeyEvent.VK_ENTER)
+			    {
+			      ke.consume();
+			      list.setSelectedIndex(0);
+			    }}});
 		contentPane.add(list);
 
 		// scrollPane = new JScrollPane();
 		// scrollPane.setBounds(10, 67, 374, 264);
 		// contentPane.add(scrollPane);
 
-		list = new JList(this.listModel);
-		scrollPane.setViewportView(list);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.addListSelectionListener(this);
-		list.setFocusable(false);
+		list_1 = new JList(this.listModel);
+		scrollPane.setViewportView(list_1);
+		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_1.addListSelectionListener(this);
+		list_1.setFocusable(false);
 
 		// button to create a new scenario
 		button_create_scenario = new JButton("Create New Scenario");
+		button_create_scenario.getAccessibleContext().setAccessibleName("New Scenario");											//for screen reader
+		button_create_scenario.getAccessibleContext().setAccessibleDescription("Press enter to select create a new scenario");		//for screen reader
 		button_create_scenario.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				int c = e.getKeyCode();
@@ -168,6 +179,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 		// button to edit an existing scenario
 		button_existing_scenario = new JButton("Edit Existing Scenario");
+		button_existing_scenario.getAccessibleContext().setAccessibleName("Edit Existing Scenario");											//for screen reader
+		button_existing_scenario.getAccessibleContext().setAccessibleDescription("Press enter to select edit an already existing scenario");
 		button_existing_scenario.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				int c = e.getKeyCode();
@@ -182,6 +195,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 		// Button to edit a field
 		button_edit_field = new JButton("Edit Field");
+		button_edit_field.getAccessibleContext().setAccessibleName("Edit a field");
+		button_edit_field.getAccessibleContext().setAccessibleDescription("Press enter to edit a field");
 		button_edit_field.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent arg0) {
 				int c = arg0.getKeyCode();
@@ -207,6 +222,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 
 		// button that deletes a field
 		button_delete_field = new JButton("Delete Field");
+		button_delete_field.getAccessibleContext().setAccessibleName("Delete Current Field");
+		button_delete_field.getAccessibleContext().setAccessibleDescription("Press enter to delete the current field");
 		button_delete_field.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
 				int c = e.getKeyCode();
@@ -232,6 +249,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		});
 		button_save_scenario.setBounds(550, 167, 214, 23);
 		contentPane.add(button_save_scenario);
+		button_save_scenario.getAccessibleContext().setAccessibleName("Save Current Scenario");
+		button_save_scenario.getAccessibleContext().setAccessibleDescription("Press enter to save the current Scenario");
 		button_save_scenario.addActionListener(this);
 
 		// combo box dropdown for adding fields
@@ -281,12 +300,14 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 		});
 		button_play_file.addActionListener(this);
+		button_play_file.getAccessibleContext().setAccessibleName("Play the current file");
+		button_play_file.getAccessibleContext().setAccessibleName("Press enter to play the current file");
 		button_play_file.setBounds(550, 201, 214, 23);
 		contentPane.add(button_play_file);
 
 		add_field_dropdown.addActionListener(this);
 
-		Set forwardKeys = getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);
+		Set forwardKeys = getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS);				//change focus keys to up and down
 		Set newForwardKeys = new HashSet(forwardKeys);
 		newForwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
 		setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, newForwardKeys);
@@ -468,8 +489,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	}
 
 	public void deleteField() {
-		if (!this.list.isSelectionEmpty()) {
-			int selected = this.list.getSelectedIndex();
+		if (!this.list_1.isSelectionEmpty()) {
+			int selected = this.list_1.getSelectedIndex();
 			System.out.println(selected);
 			this.listModel.remove(selected);
 		}
