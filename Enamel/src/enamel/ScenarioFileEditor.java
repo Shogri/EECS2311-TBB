@@ -248,6 +248,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		//});
 		//
 		add_field_dropdown.setFocusable(true);
+		add_field_dropdown.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
 		add_field_dropdown.addFocusListener(new FocusAdapter() {
 			public void focusGained(FocusEvent arg0) {
 				add_field_dropdown.showPopup();
