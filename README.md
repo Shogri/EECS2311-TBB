@@ -11,4 +11,4 @@ TreBBA is written in Java and can be downloaded from the following link: https:/
 The Documentation for TreBBA can be found at: https://github.com/Shogri/EECS2311-TBB/tree/master/Enamel/Documentation
 
 The software allows its users to create new scenarios, edit existing scenarios, and play these scenario files on a simulator software.
-The scenarios enable the user to say text, pose questions, record answers, andemulate the pins on a TBB Simulator
+The scenarios enable the user to say text, pose questions, record answers, and emulate the pins on a TBB Simulator
