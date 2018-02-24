@@ -76,10 +76,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	private JList list_1;
 	private DefaultListModel<String> listModel = new DefaultListModel<String>();
 
-	String[] addfield_selections = { "Add a field...", "Display", "Add Text", "Ask Question",
-			"Specify Correct Answer Key", "Begin Correct Answer Explanation", "End Correct Answer Explanation",
-			"Specify Wrong Answer Key", "Begin Wrong Answer Explanation", "End Wrong Answer Explanation",
-			"Import Sound File" };
+	String[] addfield_selections = { "Add a field...", "A) Display", "B) Add Text", "C) Ask Question",
+			"D) Specify Correct Answer Key", "E) Begin Correct Answer Explanation", "F) End Correct Answer Explanation",
+			"G) Specify Wrong Answer Key", "H) Begin Wrong Answer Explanation", "I) End Wrong Answer Explanation",
+			"J) Import Sound File" };
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -267,7 +267,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		//});
 		//
 		add_field_dropdown.setFocusable(true);
-		add_field_dropdown.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+		//add_field_dropdown.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
 		add_field_dropdown.addFocusListener(new FocusAdapter() {
 			public void focusGained(FocusEvent arg0) {
 				add_field_dropdown.showPopup();
@@ -542,7 +542,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("Display")) {
+			if (option.equals("A) Display")) {
 
 				if (this.selectedfile == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
@@ -576,7 +576,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("Ask Question")) {
+			if (option.equals("C) Ask Question")) {
 				if (this.selectedfile == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -620,8 +620,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
+			
+			
 
-			if (option.equals("Specify Wrong Answer Key")) {
+			if (option.equals("G) Specify Wrong Answer Key")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -645,7 +647,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("Specify Correct Answer Key")) {
+			if (option.equals("D) Specify Correct Answer Key")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -669,7 +671,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("Import Sound File")) {
+			if (option.equals("J) Import Sound File")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -694,7 +696,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("Add Text")) {
+			if (option.equals("B) Add Text")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -718,7 +720,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("Begin Correct Answer Explanation")) {
+			if (option.equals("E) Begin Correct Answer Explanation")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -733,7 +735,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("End Correct Answer Explanation")) {
+			if (option.equals("F) End Correct Answer Explanation")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -752,7 +754,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("Begin Wrong Answer Explanation")) {
+			if (option.equals("H) Begin Wrong Answer Explanation")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -765,7 +767,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("End Wrong Answer Explanation")) {
+			if (option.equals("I) End Wrong Answer Explanation")) {
 				if (this.filename == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
