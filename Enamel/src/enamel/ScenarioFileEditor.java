@@ -684,7 +684,7 @@ package enamel;
  		}
  		return false;
  	}
- 	
+ 	// save file
  	private void saveFile() throws IOException
   	{
   		if (!this.isSaved)
