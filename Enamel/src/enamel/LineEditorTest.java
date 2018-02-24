@@ -362,7 +362,7 @@ public class LineEditorTest {
 	}
 	//Test 20
 	@Test
-	public void addUserInput1() throws IOException
+	public void add() throws IOException
 	{
 		LineEditor.addUserInput(file);
 		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
@@ -827,7 +827,7 @@ public class LineEditorTest {
 	
 	//Test 44
 	@Test
-	public void testAddString2() throws IOException
+	public void The() throws IOException
 	{
 		LineEditor.addString(file, "");
 		

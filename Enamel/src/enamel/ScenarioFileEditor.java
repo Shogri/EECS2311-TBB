@@ -323,8 +323,8 @@ package enamel;
  			String[] info = new_Scenario_config.split(" ");
  
  			// add elements to list
- 			this.listModel.addElement("Cell:" + info[0]);
- 			this.listModel.addElement("Button:" + info[1]);
+ 			this.listModel.addElement("Number of Cells: " + info[0]);
+ 			this.listModel.addElement("Number of Buttons:" + info[1]);
  
  			// write into new file appropriately
  			try {
@@ -689,10 +689,10 @@ package enamel;
   	{
   		if (!this.isSaved)
   		{
- 			this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+ 			//this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
  			//this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
   			//this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
- 			this.finalfile = new File(this.filename);
+ 			//this.finalfile = new File(this.filename);
  			this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
  			this.finalfile = new File(this.filename+".txt");
   			this.finalfilepath = finalfile.getAbsolutePath();
