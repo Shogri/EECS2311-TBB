@@ -73,6 +73,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.close();
 	}
 	//Tested
+	//TODO: Needs to be implemented
 	public static void addRepeatButton(File file, int numofbutton) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -81,6 +82,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.close();
 	} 
 	//Tested
+	//TODO: Needs to be implemented
 	public static void addSkipButton(File file, int numofbutton, String identifier) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -89,6 +91,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.close();
 	}
 	//Tested
+	//Already Implemented
 	public static void addUserInput(File file) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
@@ -97,6 +100,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.close();
 	}
 	//Tested
+	//Already implemented
 	public static void addSound(File file, String soundFileName) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);

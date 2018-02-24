@@ -71,7 +71,8 @@ package enamel;
  
  	String[] addfield_selections = { "Add a field...", "Display","Add Text", "Ask Question","Specify Correct Answer Key",
  			"Begin Correct Answer Explanation","End Correct Answer Explanation","Specify Wrong Answer Key"
- 			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Import Sound File" };
+ 			,"Begin Wrong Answer Explanation","End Wrong Answer Explanation","Import Sound File"
+ 			,"Display String","Add Pause","Start Repeat","End Repeat"};
  	JComboBox add_field_dropdown;
  	JScrollPane scroll;
  	private JScrollPane scrollPane;
@@ -531,6 +532,108 @@ package enamel;
  						}
  					}
  				}
+ 			}
+ 			this.isSaved = false;
+ 		}
+ 		
+ 		//Display String
+ 		if (e.getSource().equals(this.add_field_dropdown)) {
+ 			JComboBox cb = (JComboBox) e.getSource();
+ 			String option = (String) cb.getSelectedItem();
+ 
+ 			if (option.equals("Display String")) {
+ 				if (this.filename == null) {
+ 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+ 					return;
+ 				} else {
+ 					String disp_string = JOptionPane.showInputDialog(this, "What String would you like to display?");
+ 					if(disp_string == null)
+ 					{
+ 						return;
+ 					}
+ 					else
+ 					{
+ 						this.listModel.addElement("Display String: "+disp_string);
+ 					try {
+ 						LineEditor.addDispString(this.selectedfile, disp_string);
+ 					} catch (Exception e1) {
+ 						e1.printStackTrace();
+ 					}
+ 					}
+ 			}
+ 			}
+ 			this.isSaved = false;
+ 		}
+ 		
+ 		if (e.getSource().equals(this.add_field_dropdown)) {
+ 			JComboBox cb = (JComboBox) e.getSource();
+ 			String option = (String) cb.getSelectedItem();
+ 
+ 			if (option.equals("Add Pause")) {
+ 				if (this.filename == null) {
+ 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+ 					return;
+ 				} else {
+ 					String add_pause = JOptionPane.showInputDialog(this, "How long would you like your pause to be?");
+ 					if(add_pause == null)
+ 					{
+ 						return;
+ 					}
+ 					else
+ 					{
+ 						this.listModel.addElement("Add Pause: "+Integer.valueOf(add_pause));
+ 					try {
+ 						LineEditor.addPause(this.selectedfile, Integer.valueOf(add_pause));
+ 					} catch (Exception e1) {
+ 						e1.printStackTrace();
+ 					}
+ 					}
+ 			}
+ 			}
+ 			this.isSaved = false;
+ 		}
+ 		if (e.getSource().equals(this.add_field_dropdown)) {
+ 			JComboBox cb = (JComboBox) e.getSource();
+ 			String option = (String) cb.getSelectedItem();
+ 
+ 			if (option.equals("Start Repeat")) {
+ 				if (this.filename == null) {
+ 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+ 					return;
+ 				} else {
+ 					
+ 					
+ 						this.listModel.addElement("Start Repeat");
+ 					try {
+ 						LineEditor.addRepeat(this.selectedfile);
+ 					} catch (Exception e1) {
+ 						e1.printStackTrace();
+ 					
+ 					}
+ 			}
+ 			}
+ 			this.isSaved = false;
+ 		}
+ 		
+ 		if (e.getSource().equals(this.add_field_dropdown)) {
+ 			JComboBox cb = (JComboBox) e.getSource();
+ 			String option = (String) cb.getSelectedItem();
+ 
+ 			if (option.equals("End Repeat")) {
+ 				if (this.filename == null) {
+ 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+ 					return;
+ 				} else {
+ 					
+ 					
+ 						this.listModel.addElement("End Repeat");
+ 					try {
+ 						LineEditor.addEndRepeat(this.selectedfile);
+ 					} catch (Exception e1) {
+ 						e1.printStackTrace();
+ 					
+ 					}
+ 			}
  			}
  			this.isSaved = false;
  		}
