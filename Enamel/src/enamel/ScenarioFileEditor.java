@@ -1,10 +1,11 @@
 package enamel;
 
-import java.awt.Color;
-import java.awt.FlowLayout;
+import java.awt.Component;
 import java.awt.Font;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,235 +13,365 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.HashSet;
+import java.util.Set;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import javax.swing.Box;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
 import javax.swing.JList;
-import javax.swing.JTabbedPane;
 
-public class ScenarioFileEditor extends JFrame implements ActionListener { //view and controller
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.FocusEvent;
+import javax.swing.JToolBar;
 
-	/**
-	 * 
-	 */
+public class ScenarioFileEditor extends JFrame implements ActionListener, ListSelectionListener { // view
+	private static Component parent;
 	private static final long serialVersionUID = 1L;
 
 	public String output; // global variable for output from GUI's
 	public String filename;
 	public File filePath; // global variable for absolute path of file
-	public boolean fileState; // true means new file, false means existing file(no use right now)
-	public boolean iscancelled;
+	public boolean fileState; // true means new file, false means existing
+								// file(no use right now)
+
 	public File selectedfile;
 	public String selectedfilepath;
+	public File tmpfile;
+	public String tmpfilepath;
+	public File finalfile;
+	public String finalfilepath;;
 	// -------------- GUI fields ---------------
 	private JTextArea mainTextArea;
-	private JPanel contentPane; 
+	private JPanel contentPane;
 	private JFrame frame;
 	private JButton button_create_scenario;
 	private JButton button_existing_scenario;
 	private JButton button_save_scenario;
-	private JButton button_add_button;
-	private JButton button_add_cells;
+	private JButton button_edit_field;
 	private JButton button_delete_field;
+	private JButton button_play_file;
 	private JLabel label_title;
 	private JLabel label_selected_scenario;
 	private JList list;
-	
-	
-	
+	private JList list_1;
+	private boolean isSaved = false;
+	private DefaultListModel<String> listModel = new DefaultListModel<String>();
+
+	String[] addfield_selections = { "Add a field...", "A) Display", "B) Add Text", "C) Ask Question",
+			"D) Specify Correct Answer Key", "E) Begin Correct Answer Explanation", "F) End Correct Answer Explanation",
+			"G) Specify Wrong Answer Key", "H) Begin Wrong Answer Explanation", "I) End Wrong Answer Explanation",
+			"J) Import Sound File" };
+	JComboBox add_field_dropdown;
+	JScrollPane scroll;
+	private JScrollPane scrollPane;
+
 	/**
 	 * Create the frame.
 	 * 
 	 * @throws IOException
 	 */
 	public ScenarioFileEditor() throws IOException {
+		setResizable(false);
+
 		editorWindow();
-		//		int y = JOptionPane.showConfirmDialog(null, "New File?");
-//		if (y == JOptionPane.YES_OPTION) {
-//			filename = JOptionPane.showInputDialog(this, "Type in file name:");
-//			filePath = new File(filename + ".txt");
-//			fileState = true;
-//			this.editorWindow();
-//		} else if (y == JOptionPane.NO_OPTION) {
-//			
-//			JOptionPane.showMessageDialog(null, "Select your existing file");
-//			this.launcher();
-//			while (!this.isScenarioFile(filename) && this.iscancelled == false){
-//				this.launcher();
-//				
-//			}
-//			fileState = false;
-//		} else {
-//			System.exit(0); //terminate
-//		}
+		// int y = JOptionPane.showConfirmDialog(null, "New File?");
+		// if (y == JOptionPane.YES_OPTION) {
+		// filename = JOptionPane.showInputDialog(this, "Type in file name:");
+		// filePath = new File(filename + ".txt");
+		// fileState = true;
+		// this.editorWindow();
+		// } else if (y == JOptionPane.NO_OPTION) {
+		//
+		// JOptionPane.showMessageDialog(null, "Select your existing file");
+		// this.launcher();
+		// while (!this.isScenarioFile(filename) && this.iscancelled == false){
+		// this.launcher();
+		//
+		// }
+		// fileState = false;
+		// } else {
+		// System.exit(0); //terminate
+		// }
 	}
 
 	public void editorWindow() {
-		//frame = new JFrame("TreBBA");
+		// frame = new JFrame("TreBBA");
+		// this.getRootPane().setDefaultButton(KeyEvent.VK_ENTER);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 642, 500);
+		setBounds(100, 100, 660, 500);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-	
-		//JLabel Popup
+		setResizable(true);
+		setSize(800, 500);
+		// JLabel Popup
 		label_title = new JLabel("Scenario Editor\r\n");
 		label_title.setHorizontalAlignment(SwingConstants.CENTER);
 		label_title.setFont(new Font("Tahoma", Font.BOLD, 16));
 		label_title.setBounds(31, 16, 161, 40);
 		label_title.setAlignmentX(CENTER_ALIGNMENT);
+		label_title.setFocusable(false);
 		contentPane.add(label_title);
-		
-		//JList
-				//list = new JList();
-				//list.setBounds(10, 67, 374, 264);
-				//contentPane.add(list);
-		
-		//button to create a new scenario
+
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 67, 500, 264);
+		scrollPane.setFocusable(false);
+		contentPane.add(scrollPane);
+
+		list = new JList(this.listModel);
+		list.setBounds(10, 67, 500, 264);
+		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.addListSelectionListener(this);
+		list.setVisibleRowCount(5);
+		list.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent ke) {
+				if (ke.getKeyCode() == KeyEvent.VK_ENTER) {
+					ke.consume();
+					list.setSelectedIndex(0);
+				}
+			}
+		});
+		contentPane.add(list);
+
+		// scrollPane = new JScrollPane();
+		// scrollPane.setBounds(10, 67, 374, 264);
+		// contentPane.add(scrollPane);
+
+		list_1 = new JList(this.listModel);
+		scrollPane.setViewportView(list_1);
+		list_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list_1.addListSelectionListener(this);
+		list_1.setFocusable(false);
+
+		// button to create a new scenario
 		button_create_scenario = new JButton("Create New Scenario");
+		button_create_scenario.getAccessibleContext().setAccessibleName("New Scenario"); // for
+																							// screen
+																							// reader
+		button_create_scenario.getAccessibleContext()
+				.setAccessibleDescription("Press enter to select create a new scenario"); // for
+																							// screen
+																							// reader
+		button_create_scenario.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				int c = e.getKeyCode();
+				if (c == KeyEvent.VK_ENTER) {
+					newScenario();
+				}
+			}
+		});
 		button_create_scenario.setBounds(216, 11, 170, 23);
 		contentPane.add(button_create_scenario);
 		button_create_scenario.addActionListener(this);
-		
-		//button to edit an existing scenario
+
+		// button to edit an existing scenario
 		button_existing_scenario = new JButton("Edit Existing Scenario");
-		button_existing_scenario.setBounds(216, 33, 169, 23);
+		button_existing_scenario.getAccessibleContext().setAccessibleName("Edit Existing Scenario"); // for
+																										// screen
+																										// reader
+		button_existing_scenario.getAccessibleContext()
+				.setAccessibleDescription("Press enter to select edit an already existing scenario");
+		button_existing_scenario.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				int c = e.getKeyCode();
+				if (c == KeyEvent.VK_ENTER) {
+					editScenario();
+				}
+			}
+		});
+		button_existing_scenario.setBounds(216, 33, 170, 23);
 		contentPane.add(button_existing_scenario);
 		button_existing_scenario.addActionListener(this);
-		
-		
-		//label that states the selected scenario
+
+		// Button to edit a field
+		button_edit_field = new JButton("Edit Field");
+		button_edit_field.getAccessibleContext().setAccessibleName("Edit a field");
+		button_edit_field.getAccessibleContext().setAccessibleDescription("Press enter to edit a field");
+		button_edit_field.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent arg0) {
+				int c = arg0.getKeyCode();
+				if (c == KeyEvent.VK_ENTER) {
+					// editScenario();
+				}
+			}
+		});
+		button_edit_field.setBounds(550, 99, 214, 23);
+		contentPane.add(button_edit_field);
+		button_edit_field.addActionListener(this);
+
+		// label that states the selected scenario
+
 		label_selected_scenario = new JLabel("Selected Scenario:");
 		label_selected_scenario.setBounds(402, 16, 121, 40);
+		label_selected_scenario.setFocusable(false);
+		label_selected_scenario = new JLabel("No Selected Scenario");
+		label_selected_scenario.setHorizontalAlignment(SwingConstants.CENTER);
+		label_selected_scenario.setBounds(402, 16, 183, 40);
+
 		contentPane.add(label_selected_scenario);
-		
-		//button that adds a new field
-		button_add_cells = new JButton("Number of cells");
-		button_add_cells.setBounds(402, 66, 183, 23);
-		contentPane.add(button_add_cells);
-		button_add_cells.addActionListener(this);
-		
-		//Button to edit a field
-		button_add_button = new JButton("Number of buttons");
-		button_add_button.setBounds(402, 99, 183, 23);
-		contentPane.add(button_add_button);
-		button_add_button.addActionListener(this);
-				
-		
-		//button that deletes a field
+
+		// button that deletes a field
 		button_delete_field = new JButton("Delete Field");
-		button_delete_field.setBounds(402, 132, 183, 23);
+		button_delete_field.getAccessibleContext().setAccessibleName("Delete Current Field");
+		button_delete_field.getAccessibleContext().setAccessibleDescription("Press enter to delete the current field");
+		button_delete_field.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				int c = e.getKeyCode();
+				if (c == KeyEvent.VK_ENTER) {
+					deleteField();
+				}
+			}
+		});
+		button_delete_field.setBounds(550, 132, 214, 23);
 		contentPane.add(button_delete_field);
 		button_delete_field.addActionListener(this);
-		
-		//button that saves the current scenario
+
+		// button that saves the current scenario
 		button_save_scenario = new JButton("Save Scenario");
-		button_save_scenario.setBounds(402, 167, 183, 23);
+		button_save_scenario.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				int c = e.getKeyCode();
+				if (c == KeyEvent.VK_ENTER) {
+					saveScenario();
+				}
+			}
+		});
+		button_save_scenario.setBounds(550, 167, 214, 23);
 		contentPane.add(button_save_scenario);
+		button_save_scenario.getAccessibleContext().setAccessibleName("Save Current Scenario");
+		button_save_scenario.getAccessibleContext()
+				.setAccessibleDescription("Press enter to save the current Scenario");
 		button_save_scenario.addActionListener(this);
-		
-		//Text Area
-		mainTextArea = new JTextArea();
-		mainTextArea.setEditable(true);
-		mainTextArea.setBounds(5, 65, 380, 300);
-		contentPane.add(mainTextArea);
-	
-		
+
+		// combo box dropdown for adding fields
+
+		add_field_dropdown = new JComboBox(this.addfield_selections);
+		// add_field_dropdown.addKeyListener(new KeyAdapter() {
+		// public void keyPressed(KeyEvent e) {
+		// int c = e.getKeyCode();
+		// if (c == KeyEvent.VK_ENTER) {
+		// add_field_dropdown.showPopup();
+		// add_field_dropdown.setSelectedIndex(1);
+		// }
+		// }
+		// });
+		//
+		add_field_dropdown.setFocusable(true);
+		// add_field_dropdown.putClientProperty("JComboBox.isTableCellEditor",
+		// Boolean.TRUE);
+		add_field_dropdown.addFocusListener(new FocusAdapter() {
+			public void focusGained(FocusEvent arg0) {
+				add_field_dropdown.showPopup();
+				// add_field_dropdown.addKeyListener(new KeyAdapter() {
+				// public void keyPressed(KeyEvent e) {
+				// int c = e.getKeyCode();
+				// int i = 0;
+				// if (c == KeyEvent.VK_DOWN) {
+				// i++;
+				// add_field_dropdown.setSelectedIndex(i);
+				// }
+				// }
+				// });
+			}
+		});
+
+		add_field_dropdown.setToolTipText("Add a field...");
+		add_field_dropdown.setBounds(550, 65, 214, 20);
+		contentPane.add(add_field_dropdown);
+
+		// play current file button
+		button_play_file = new JButton("Play Current File ");
+		button_play_file.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+				int c = e.getKeyCode();
+				if (c == KeyEvent.VK_ENTER) {
+					playFile();
+				}
+			}
+		});
+		button_play_file.addActionListener(this);
+		button_play_file.getAccessibleContext().setAccessibleName("Play the current file");
+		button_play_file.getAccessibleContext().setAccessibleName("Press enter to play the current file");
+		button_play_file.setBounds(550, 201, 214, 23);
+		contentPane.add(button_play_file);
+
+		add_field_dropdown.addActionListener(this);
+
+		Set forwardKeys = getFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS); // change
+																								// focus
+																								// keys
+																								// to
+																								// up
+																								// and
+																								// down
+		Set newForwardKeys = new HashSet(forwardKeys);
+		newForwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+		setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, newForwardKeys);
+
+		Set backwardKeys = getFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS);
+		Set newBackwardKeys = new HashSet(backwardKeys);
+		newBackwardKeys.add(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+		setFocusTraversalKeys(KeyboardFocusManager.BACKWARD_TRAVERSAL_KEYS, newBackwardKeys);
+
 	}
-	
+
 	public void launcher() throws IOException {
-		
-		this.iscancelled = false;
 		JFileChooser chooser1 = new JFileChooser();
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
 		chooser1.setFileFilter(filter);
 		int returnVal = chooser1.showOpenDialog(null);
-		
+
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
-		
-		if (returnVal == JFileChooser.CANCEL_OPTION)
-		{
-			this.iscancelled = true;
+
+		if (returnVal == JFileChooser.CANCEL_OPTION) {
 			return;
 		}
-		
+
 		chooser1.removeAll();
 		//
-		//if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
-		//{
-			//System.out.println("failed");
-			//JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
-			//this.launcher();
-		//}
-		
-		try
-		{
+		// if (!isScenarioFile(chooser1.getSelectedFile().getAbsolutePath()))
+		// {
+		// System.out.println("failed");
+		// JOptionPane.showMessageDialog(null, "Error: Please select a Scenario
+		// file");
+		// this.launcher();
+		// }
+
+		try {
 			filename = chooser1.getSelectedFile().getAbsolutePath();
 			filePath = new File(filename);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-	}
-	
-	public void FileParser(File f) throws IOException{
-		BufferedReader x = new BufferedReader(new FileReader(f));
-		while(x.readLine() != null){
-			String n = x.readLine();
-			String y = n.replaceAll("~/", "");
-			y = y.replaceAll("-", " ");	
-			y = y.replaceAll("disp", "display:");
-			y = y.replaceAll("user input", "command: user input!");
-			y = y.replaceAll("reset buttons", "command: reset!");
-			System.out.println(y);
-		}
-		x.close();
-	}
-	
-	
 
-	public boolean isScenarioFile(String file) // this may not be needed
-	{
-		try {
-			FileReader filereader = new FileReader(file);
-			BufferedReader buffread = new BufferedReader(filereader);
-			
-			String line1 = buffread.readLine();
-			System.out.println(line1);
-			String line2 = buffread.readLine();
-			System.out.println(line2);
-			
-			if (line1.matches("Cell [0-9+]") && line2.matches("Button [0-9+]"))
-			{
-				buffread.close();
-				return true;
-			}else{
-				System.out.println("failed");
-				JOptionPane.showMessageDialog(null, "Error: Please select a Scenario file");
-				buffread.close();
-				return false;
-				
-			}
-			
-		} catch (Exception e)
-		{
-			//e.printStackTrace();
-			return false;
-		}
 	}
-	
+
 	/**
 	 * The method WriteCell currently deletes all content of the current chosen
 	 * file and outputs the parameter string to the beginning of the parameter
@@ -252,11 +383,11 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 	 */
 
 	public void WriteCell(String inputCells, File f) throws IOException {
-		
+
 		FileWriter fw = new FileWriter(f);
 		fw.write(inputCells + "\n");
 		fw.close();
-		}
+	}
 
 	/**
 	 * The method WriteButton adds to the end of the current chosen file feel
@@ -271,157 +402,493 @@ public class ScenarioFileEditor extends JFrame implements ActionListener { //vie
 		fw.write(System.lineSeparator());
 		fw.write(inputButton + "\n");
 		fw.close();
+	}
+
+	public void editScenario() {
+		this.listModel.clear();
+		JFileChooser chooser1 = new JFileChooser();
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
+		chooser1.setFileFilter(filter);
+		int returnVal = chooser1.showOpenDialog(null);
+
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
 		}
 
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		//button_create_scenario
-		//button_edit_scenario
-		if (e.getSource().equals(this.button_existing_scenario))
-		{
-			
-			JFileChooser chooser1 = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Choose file to edit", "txt");
-			chooser1.setFileFilter(filter);
-			int returnVal = chooser1.showOpenDialog(null);
+		if (returnVal == JFileChooser.ERROR_OPTION) {
+			return;
+		}
 
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				System.out.println("You chose to open this file: " + chooser1.getSelectedFile().getName());
-			}
-			
-			if (returnVal == JFileChooser.ERROR_OPTION)
-			{
-				return;
-			}
-			
-			if (returnVal == JFileChooser.CANCEL_OPTION)
-			{
-				return;
-			}
-			
-			this.selectedfile = chooser1.getSelectedFile();
-			this.selectedfilepath = chooser1.getSelectedFile().getAbsolutePath();
+		if (returnVal == JFileChooser.CANCEL_OPTION) {
+			return;
 		}
-		
-		if (e.getSource().equals(this.button_create_scenario))
-		{
-			filename = JOptionPane.showInputDialog(this, "Type in file name:");
-			this.selectedfile = new File(filename + ".txt");
-			this.selectedfilepath = selectedfile.getAbsolutePath();
+		this.selectedfile = chooser1.getSelectedFile();
+		this.selectedfilepath = chooser1.getSelectedFile().getAbsolutePath();
+
+		this.label_selected_scenario.setText(chooser1.getSelectedFile().getName());
+
+		this.label_selected_scenario.setText("Selected Scenario: " + chooser1.getSelectedFile().getName());
+
+		try {
+			LineEditor.parseScenario(this.selectedfile, listModel);
+		} catch (Exception e1) {
+			e1.printStackTrace();
 		}
-		
-		if (e.getSource().equals(this.button_save_scenario))
-		{
+	}
+
+	public void newScenario() {
+		filename = JOptionPane.showInputDialog(this, "Type in file name:");
+		this.selectedfile = new File(filename + ".txt");
+		this.selectedfilepath = selectedfile.getAbsolutePath();
+
+		// popup, ask for file information
+		String new_Scenario_config = JOptionPane.showInputDialog(this,
+				" Enter Number of cells, followed by a space, " + "followed by the number of buttons");
+
+		// popup, ask for file information
+
+		if (new_Scenario_config == null) {
+			return;
+		}
+		String[] info = new_Scenario_config.split(" ");
+
+		// add elements to list
+		this.listModel.addElement("Cell:" + info[0]);
+		this.listModel.addElement("Button:" + info[1]);
+
+		// write into new file appropriately
+		try {
+			LineEditor.setupCellButton(this.selectedfile, Integer.parseInt(info[0]), Integer.parseInt(info[1]));
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		this.label_selected_scenario.setText("Selected Scenario: " + this.selectedfile.getName());
+
+	}
+
+	public void saveScenario() {
+		if (this.selectedfile == null) {
+			JOptionPane.showMessageDialog(null, "Error: Please select a file");
+		} else {
 			JFileChooser fileSaver = new JFileChooser();
-			//JFileChooser chooser1 = new JFileChooser();
-			//FileNameExtensionFilter filter = new FileNameExtensionFilter("Factory Scenario Files", "txt");
-			//chooser1.setFileFilter(filter);
+			// JFileChooser chooser1 = new JFileChooser();
+			// FileNameExtensionFilter filter = new
+			// FileNameExtensionFilter("Factory Scenario Files", "txt");
+			// chooser1.setFileFilter(filter);
 			int returnVal = fileSaver.showSaveDialog(ScenarioFileEditor.this);
-			if(returnVal == JFileChooser.APPROVE_OPTION)
-			{
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				String writtenStuff = mainTextArea.getText();
 				System.out.println(writtenStuff);
 				try {
-					FileWriter fw = new FileWriter(fileSaver.getSelectedFile()+".txt");
+					FileWriter fw = new FileWriter(fileSaver.getSelectedFile() + ".txt");
 					BufferedWriter bw = new BufferedWriter(fw);
-					for(String fgh : mainTextArea.getText().split("\\n"))
-					{
-						if(fgh.startsWith("Display"))
-						{ 
-							
-							bw.write("/~disp-cell-pins:"+fgh.substring(8));
+					for (String fgh : mainTextArea.getText().split("\\n")) {
+						if (fgh.startsWith("Display")) {
+
+							bw.write("/~disp-cell-pins:" + fgh.substring(8));
 							bw.newLine();
 						}
-						
-						else if(fgh.startsWith("Reset"))
-						{
+
+						else if (fgh.startsWith("Reset")) {
 							bw.write("/~reset-buttons");
 							bw.newLine();
+						} else {
+							bw.write(fgh);
+							bw.newLine();
 						}
-						else
-						{
-						bw.write(fgh);
-						bw.newLine();
-						}
-						}
-					 bw.close();
-			         fw.close();
+					}
+					bw.close();
+					fw.close();
 				} catch (IOException e1) {
-					
+
 					e1.printStackTrace();
 				}
 			}
 		}
-		
-		if (e.getSource().equals(this.button_add_cells))
-		{
-			mainTextArea.append("Cell ");
-		}
-		
-		if (e.getSource().equals(this.button_add_button))
-		{
-			mainTextArea.append("Button ");
-		}
-		
-		if (e.getSource().equals(this.button_delete_field))
-		{
-			
-		}
-		/*
-		if (e.getSource() == b1) {
-			output = JOptionPane.showInputDialog("Enter Number of Braille Cells (enter a positive integer): ");
-			int intCells = Integer.valueOf(output);
-			if(intCells <= 0)
-			{
-				throw new IllegalArgumentException("Please enter a positive argument");
-			}
-			else
-			{
-			try {
 
-				this.WriteCell("Cells "+output, filePath);
-
-				this.WriteCell(output, filePath);
-
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-			}
-		}
-		if (e.getSource() == b2) {
-			//output = "Button " + JOptionPane.showInputDialog("Enter Number of Buttons (enter an integer): ");
-			output = JOptionPane.showInputDialog("Enter Number of Buttons (enter an integer): ");
-			int intInput = Integer.valueOf(output);
-			
-			try {
-
-				if(intInput<=0)
-				{
-					throw new IllegalArgumentException("Please input  positive  integer");
-				}
-				else
-				{
-				this.WriteButton("Button "+output, filePath);
-				}
-
-				
-
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-
-		}
-
-		if (e.getSource() == b3) {
-			output = JOptionPane.showInputDialog("Enter Command");
-			try {
-				this.WriteButton(output, filePath);
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
-		}
-		*/
 	}
+
+	public void deleteField() {
+		if (!this.list_1.isSelectionEmpty()) {
+			int selected = this.list_1.getSelectedIndex();
+			System.out.println(selected);
+			this.listModel.remove(selected);
+		}
+
+	}
+
+	public void playFile() {
+		if (this.selectedfile == null) {
+			JOptionPane.showMessageDialog(null, "Error: Please select a file");
+			return;
+		}
+		Thread starterCodeThread = new Thread("Starter Code Thread") {
+			public void run() {
+				ScenarioParser s = new ScenarioParser(true);
+				s.setScenarioFile(selectedfilepath);
+			}
+		};
+		starterCodeThread.start();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		// ----------------edit existing scenario--------------------
+
+		if (e.getSource().equals(this.button_existing_scenario)) // NOTE: check
+																	// for non
+																	// scenario
+																	// files
+		{
+			this.editScenario();
+		}
+
+		// --------------Create a new Scenario----------------
+
+		if (e.getSource().equals(this.button_create_scenario)) {
+			// create new file
+			this.newScenario();
+		}
+
+		// ---------Save current scenario---------------
+
+		if (e.getSource().equals(this.button_save_scenario)) {
+ 			if (this.filename == null) 
+ 			{
+ 				JOptionPane.showMessageDialog(null, "Error: Please select a file");
+ 			} else 
+ 			{
+ 				try 
+ 				{
+ 					// TODO
+ 					this.saveFile();
+ 					this.deleteTmpFile();
+ 				} catch (Exception e1) 
+ 				{
+ 					e1.printStackTrace();
+ 				}
+ 				this.isSaved = true;
+ 			}
+}
+		// add a field (dropdown)
+
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("A) Display")) {
+
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				}
+				JTextField cellnum = new JTextField(1);
+				JTextField config = new JTextField(8);
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("Cell#"));
+				myPanel.add(cellnum);
+				myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+				myPanel.add(new JLabel("Letter"));
+				myPanel.add(config);
+
+				int result = JOptionPane.showConfirmDialog(null, myPanel,
+						"Please Enter Cell# and Letter to be Displayed", JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					this.listModel.addElement(option + " cell number " + Integer.parseInt(cellnum.getText())
+							+ ", With configuration " + Integer.parseInt(config.getText()));
+					try {
+						LineEditor.addDispCellPins(this.selectedfile, Integer.parseInt(cellnum.getText()),
+								Integer.parseInt(config.getText()));
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			this.isSaved = false;
+		}
+
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("C) Ask Question")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String disp_cell_config = JOptionPane.showInputDialog(this, "Enter Question");
+					if (disp_cell_config == null) {
+						return;
+					} else {
+						this.listModel.addElement(disp_cell_config);
+						try {
+							LineEditor.addString(this.selectedfile, disp_cell_config);
+						}
+
+						catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+					String cellsToActivate = JOptionPane.showInputDialog(this,
+							"Enter the keys you'd like to activate" + ", separated by a comma");
+					if (cellsToActivate == null) {
+						return;
+					} else {
+						String[] AcKeys = cellsToActivate.split(",");
+						try {
+							LineEditor.activateKeys(this.selectedfile, Integer.valueOf(AcKeys[0]));
+							LineEditor.activateKeys(this.selectedfile, Integer.valueOf(AcKeys[1]));
+							LineEditor.addUserInput(this.selectedfile);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			this.isSaved = false;
+		}
+
+		// edit selected field
+		if (e.getSource().equals(this.button_edit_field)) {
+
+		}
+
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("G) Specify Wrong Answer Key")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String wrong_key = JOptionPane.showInputDialog(this,
+							"What key does the user need to press for the wrong answer?");
+					if (wrong_key == null) {
+						return;
+					} else {
+						this.listModel.addElement("Wrong Answer: " + wrong_key);
+						try {
+							LineEditor.setKey(this.selectedfile, Integer.valueOf(wrong_key));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			this.isSaved = false;
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("D) Specify Correct Answer Key")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String wrong_key = JOptionPane.showInputDialog(this,
+							"What key does the user need to press for the correct answer?");
+					if (wrong_key == null) {
+						return;
+					} else {
+						this.listModel.addElement("Correct Answer: " + wrong_key);
+						try {
+							LineEditor.setKey(this.selectedfile, Integer.valueOf(wrong_key));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			this.isSaved = false;
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("J) Import Sound File")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					JFileChooser soundChooser = new JFileChooser();
+					FileNameExtensionFilter soundFilter = new FileNameExtensionFilter("Sound file", "wav");
+					soundChooser.setFileFilter(soundFilter);
+					int returnval = soundChooser.showOpenDialog(parent);
+					if (returnval == JFileChooser.APPROVE_OPTION) {
+						String soundName = soundChooser.getSelectedFile().getName();
+						this.listModel.addElement("Playing Sound: " + soundName);
+						try {
+							LineEditor.importSound(this.selectedfile, soundName);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			this.isSaved = false;
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("B) Add Text")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					String addText = JOptionPane.showInputDialog(this,
+							"Please enter the text that you would like to be read out");
+					if (addText == null) {
+						return;
+					} else {
+						this.listModel.addElement(addText);
+						try {
+							LineEditor.addString(this.selectedfile, addText);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+			this.isSaved = false;
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("E) Begin Correct Answer Explanation")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+
+					this.listModel.addElement("Correct answer explanation starts here");
+
+				}
+			}
+			this.isSaved = false;
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("F) End Correct Answer Explanation")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					this.listModel.addElement("Correct answer explanation ends here");
+					try {
+						LineEditor.addSkip(this.selectedfile, "NEXTT");
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+
+				}
+			}
+			this.isSaved = false;
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("H) Begin Wrong Answer Explanation")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					this.listModel.addElement("Wrong answer explanation starts here");
+				}
+			}
+			this.isSaved = false;
+		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("I) End Wrong Answer Explanation")) {
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				} else {
+					this.listModel.addElement("Wrong answer explanation ends here");
+					try {
+						LineEditor.addSkip(this.selectedfile, "NEXTT");
+						LineEditor.nextQuestion(this.selectedfile);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+
+				}
+			}
+			this.isSaved = false;
+		}
+		// append("display", disp_cell_config);
+		// this.list.add
+		// edit selected field
+		if (e.getSource().equals(this.button_edit_field)) {
+
+		}
+
+		// delete selected field
+		if (e.getSource().equals(this.button_delete_field)) {
+			this.deleteField();
+			this.isSaved = false;
+		}
+		// play file
+		if (e.getSource().equals(this.button_play_file)) {
+			this.playFile();
+			this.isSaved = false;
+		}
+	}
+
+	private boolean savepopup() //true = exit without saving. false = don't do anything
+ 	{
+ 		
+ 		if (!this.isSaved)
+ 		{
+ 			int dialogResult;
+ 			dialogResult = JOptionPane.showConfirmDialog (null, "Are you sure you would like to exit without saving?",
+ 					"Warning", JOptionPane.YES_NO_CANCEL_OPTION);
+ 			if (dialogResult == JOptionPane.YES_OPTION)
+ 			{
+ 				return true;
+ 			}
+ 		}
+ 		return false;
+ 	}
+ 	
+	private void saveFile() throws IOException
+	{
+		if (!this.isSaved)
+		{
+			//this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+			//this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
+			this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+			this.finalfile = new File(this.filename+".txt");
+			this.finalfilepath = finalfile.getAbsolutePath();
+			System.out.println("Final File: " + this.finalfile + " Selected file: " + selectedfile);
+			Files.copy(this.selectedfile.toPath(), this.finalfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			this.isSaved = true;
+		}
+}
+ 	
+ 	private void deleteTmpFile()
+ 	{
+ 		if (this.finalfile != null) //make sure there's a file that's already saved
+ 		{
+ 			this.selectedfile.delete();
+ 		} else
+ 		{
+ 			System.out.println("There are no other files present!");
+ 		}
 }
 
+	@Override
+	public void valueChanged(ListSelectionEvent e) {
+		// TODO Auto-generated method stub
+	}
+}

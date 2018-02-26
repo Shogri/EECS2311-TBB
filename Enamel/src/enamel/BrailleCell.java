@@ -198,4 +198,10 @@ public class BrailleCell {
 	public int getNumberOfPins() {
 		return listOfPins.length;
 	}
+	
+	public String getPinRepresentation(char letter)
+	{
+		
+		return alphabet.get(letter);
+	}
 }
