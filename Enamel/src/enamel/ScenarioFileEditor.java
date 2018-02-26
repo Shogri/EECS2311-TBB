@@ -229,7 +229,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		label_selected_scenario.setFocusable(false);
 		label_selected_scenario = new JLabel("No Selected Scenario");
 		label_selected_scenario.setHorizontalAlignment(SwingConstants.CENTER);
-		label_selected_scenario.setBounds(402, 16, 183, 40);
+		label_selected_scenario.setBounds(402, 16, 362, 40);
 
 		contentPane.add(label_selected_scenario);
 
@@ -537,9 +537,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		// ----------------edit existing scenario--------------------
 
 		if (e.getSource().equals(this.button_existing_scenario)) // NOTE: check
-																	// for non
-																	// scenario
-																	// files
+																	
 		{
 			this.editScenario();
 		}
@@ -554,7 +552,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		// ---------Save current scenario---------------
 
 		if (e.getSource().equals(this.button_save_scenario)) {
- 			if (this.filename == null) 
+ 			if (this.selectedfile == null) 
  			{
  				JOptionPane.showMessageDialog(null, "Error: Please select a file");
  			} else 
