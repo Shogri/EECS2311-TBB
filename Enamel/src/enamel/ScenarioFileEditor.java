@@ -845,7 +845,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		}
 	}
 
-	private boolean savepopup() //true = exit without saving. false = don't do anything
+ 	private boolean savepopup() //true = exit without saving. false = don't do anything
  	{
  		
  		if (!this.isSaved)
@@ -861,26 +861,29 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
  		return false;
  	}
  	
-	private void saveFile() throws IOException
-	{
-		if (!this.isSaved)
-		{
-			//this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
-			//this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
-			this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
-			this.finalfile = new File(this.filename+".txt");
-			this.finalfilepath = finalfile.getAbsolutePath();
-			System.out.println("Final File: " + this.finalfile + " Selected file: " + selectedfile);
-			Files.copy(this.selectedfile.toPath(), this.finalfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			this.isSaved = true;
-		}
-}
+ 	private void saveFile() throws IOException
+  	{
+  		if (!this.isSaved)
+  		{
+ 			//this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+ 			//this.selectedfile.renameTo(new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+  			//this.finalfile = new File(this.selectedfile.getParent() + "\\" + this.filename);
+ 			//this.finalfile = new File(this.filename);
+ 			this.tmpfile = (new File(this.selectedfile.getParent() + "\\" + this.filename + "_tmp"));
+ 			this.finalfile = new File(this.filename+".txt");
+  			this.finalfilepath = finalfile.getAbsolutePath();
+ 			System.out.println("Final File: " + finalfile + " Selected file: " + selectedfile);
+ 		System.out.println("Final File: " + this.finalfile + " Selected file: " + selectedfile);
+  			Files.copy(this.selectedfile.toPath(), this.finalfile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+  			this.isSaved = true;
+  		}
+ 	}
  	
  	private void deleteTmpFile()
  	{
  		if (this.finalfile != null) //make sure there's a file that's already saved
  		{
- 			this.selectedfile.delete();
+ 			this.tmpfile.delete();
  		} else
  		{
  			System.out.println("There are no other files present!");
