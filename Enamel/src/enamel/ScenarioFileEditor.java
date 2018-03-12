@@ -437,7 +437,14 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	}
 
 	public void newScenario() {
+		
 		filename = JOptionPane.showInputDialog(this, "Type in file name:");
+		 if (this.selectedfile == null) 
+			{
+				JOptionPane.showMessageDialog(null, "Error: Please type in a file name");
+				return;
+			}
+		
 		this.selectedfile = new File(filename + ".txt");
 		this.selectedfilepath = selectedfile.getAbsolutePath();
 
@@ -463,7 +470,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			e1.printStackTrace();
 		}
 		this.label_selected_scenario.setText("Selected Scenario: " + this.selectedfile.getName());
-
+		
 	}
 
 	public void saveScenario() {
@@ -547,6 +554,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		if (e.getSource().equals(this.button_create_scenario)) {
 			// create new file
 			this.newScenario();
+			
 		}
 
 		// ---------Save current scenario---------------
