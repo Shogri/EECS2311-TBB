@@ -82,7 +82,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	String[] addfield_selections = { "Add a field...", "A) Display", "B) Add Text", "C) Ask Question",
 			"D) Specify Correct Answer Key", "E) Begin Correct Answer Explanation", "F) End Correct Answer Explanation",
 			"G) Specify Wrong Answer Key", "H) Begin Wrong Answer Explanation", "I) End Wrong Answer Explanation",
-			"J) Import Sound File" };
+			"J) Display A string","K) Import Sound File", "L) Clear cell"};
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -439,7 +439,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	public void newScenario() {
 		
 		filename = JOptionPane.showInputDialog(this, "Type in file name:");
-		 if (this.selectedfile == null) 
+		System.out.println("Test 1");
+		if (this.filename == null) 
 			{
 				JOptionPane.showMessageDialog(null, "Error: Please type in a file name");
 				return;
@@ -714,7 +715,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
 
-			if (option.equals("J) Import Sound File")) {
+			if (option.equals("K) Import Sound File")) {
 				if (this.selectedfile == null) {
 					JOptionPane.showMessageDialog(null, "Error: Please select a file");
 					return;
@@ -832,6 +833,67 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+
+			if (option.equals("J) Display A string")) {
+
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				}
+				JTextField stringTBdisplay = new JTextField(8);
+				JTextField config = new JTextField(8);
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("String to be displayed"));
+				myPanel.add(stringTBdisplay);
+				
+				int result = JOptionPane.showConfirmDialog(null, myPanel,
+						"Please Enter The String to be displayed", JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					this.listModel.addElement(option + " " + (stringTBdisplay.getText()));
+					try {
+						LineEditor.addDispString(this.selectedfile, stringTBdisplay.getText());
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			this.isSaved = false;
+		}
+			if (e.getSource().equals(this.add_field_dropdown)) {
+				JComboBox cb = (JComboBox) e.getSource();
+				String option = (String) cb.getSelectedItem();
+
+				if (option.equals("L) Clear cell")) {
+
+					if (this.selectedfile == null) {
+						JOptionPane.showMessageDialog(null, "Error: Please select a file");
+						return;
+					}
+					JTextField cellTbCleared = new JTextField(3);
+					//JTextField config = new JTextField(8);
+					JPanel myPanel = new JPanel();
+					myPanel.add(new JLabel("Cell to be cleared"));
+					myPanel.add(cellTbCleared);
+					
+					int result = JOptionPane.showConfirmDialog(null, myPanel,
+							"Please Enter The Cell to be Cleared", JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						this.listModel.addElement(option + " " + (cellTbCleared.getText()));
+						try {
+							LineEditor.addDispClearCell(this.selectedfile, Integer.parseInt(cellTbCleared.getText()));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+				this.isSaved = false;
+			
+			
+		}
+
 		// append("display", disp_cell_config);
 		// this.list.add
 		// edit selected field
