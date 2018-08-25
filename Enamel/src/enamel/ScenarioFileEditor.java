@@ -82,7 +82,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	String[] addfield_selections = { "Add a field...", "A) Display", "B) Add Text", "C) Ask Question",
 			"D) Specify Correct Answer Key", "E) Begin Correct Answer Explanation", "F) End Correct Answer Explanation",
 			"G) Specify Wrong Answer Key", "H) Begin Wrong Answer Explanation", "I) End Wrong Answer Explanation",
-			"J) Display A string","K) Import Sound File", "L) Clear cell"};
+			"J) Display A string","K) Import Sound File", "L) Clear cell", "M) Add Pause"};
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -578,7 +578,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
  				this.isSaved = true;
  			}
 }
-		// add a field (dropdown)
+		/*
+		 * To add a field (dropdown)
+		 */
 
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
@@ -614,7 +616,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
-
+		/*
+		 * Ask a Question
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -656,7 +660,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			this.isSaved = false;
 		}
 
-		// edit selected field
+		/*
+		 * To Specify the Wrong Answer Key
+		 */
 		if (e.getSource().equals(this.button_edit_field)) {
 
 		}
@@ -686,6 +692,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * To specify the correct answer key
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -711,6 +720,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * To import a sound file
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -737,6 +749,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * To add Text to the file
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -762,6 +777,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * For Beginning thr Correct Answer Explanation
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -778,6 +796,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * For Ending the Wrong Answer Explanation
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -798,6 +819,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * For Beginning the Wrong Answer Explanation
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -812,6 +836,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * For ending the wrong answer explanation
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -833,6 +860,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		
+		/*
+		 * To Display a String
+		 */
 		if (e.getSource().equals(this.add_field_dropdown)) {
 			JComboBox cb = (JComboBox) e.getSource();
 			String option = (String) cb.getSelectedItem();
@@ -862,6 +893,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		/*
+		 * To clear a certain cell
+		 */
 			if (e.getSource().equals(this.add_field_dropdown)) {
 				JComboBox cb = (JComboBox) e.getSource();
 				String option = (String) cb.getSelectedItem();
@@ -890,9 +924,42 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					}
 				}
 				this.isSaved = false;
+			}
 			
-			
-		}
+			/*
+			 * To Add a Pause
+			 */
+			if (e.getSource().equals(this.add_field_dropdown)) {
+				JComboBox cb = (JComboBox) e.getSource();
+				String option = (String) cb.getSelectedItem();
+
+				if (option.equals("M) Add Pause")) {
+
+					if (this.selectedfile == null) {
+						JOptionPane.showMessageDialog(null, "Error: Please select a file");
+						return;
+					}
+					JTextField pauseLength = new JTextField(3);
+					//JTextField config = new JTextField(8);
+					JPanel myPanel = new JPanel();
+					myPanel.add(new JLabel("How long should the pause be?"));
+					myPanel.add(pauseLength);
+					
+					int result = JOptionPane.showConfirmDialog(null, myPanel,
+							"How long do you want the pause to be?", JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						this.listModel.addElement(option + " " + (pauseLength.getText()));
+						try {
+							LineEditor.addPause(this.selectedfile, Integer.parseInt(pauseLength.getText()));
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+				this.isSaved = false;
+			}
+	
+				
 
 		// append("display", disp_cell_config);
 		// this.list.add

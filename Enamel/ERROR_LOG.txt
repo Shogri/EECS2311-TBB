@@ -1,6 +1,6 @@
-Aug 18, 2018 4:10:25 PM enamel.ScenarioParser errorLog
+Aug 18, 2018 5:33:09 PM enamel.ScenarioParser errorLog
 WARNING: Exception error: java.io.FileNotFoundException: C:\Users\Arsh Punia\git\EECS2311-TBB\Enamel\AudioFiles\correct.wav (The system cannot find the path specified)
-Aug 18, 2018 4:10:25 PM enamel.ScenarioParser errorLog
+Aug 18, 2018 5:33:09 PM enamel.ScenarioParser errorLog
 INFO: Expected the name of the file (including extension) but instead got: correct.wav
  Perhaps you forgot to include the extension of the sound file with the name? Other possibilities include: 
  Incorrect name of the file, the file not being in the same location as the project folder, or an attempt to play an unsupported sound file. (only .wav filesare supported at this time)
