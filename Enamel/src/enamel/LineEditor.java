@@ -6,6 +6,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 
 import javax.swing.DefaultListModel;
 
@@ -47,6 +52,19 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write(System.lineSeparator());
 		fw.write("/~pause:" + timeofpause);
 		fw.close();
+	}
+	
+	public static void addPause(int position, File file, int timeofpause) throws IOException 
+	{
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+
+		//int position = 3;
+		//String extraLine = "Maa chuda le";  
+
+		lines.add(position, "/~pause:"+timeofpause);
+		lines.remove(position-1);
+		Files.write(path, lines, StandardCharsets.UTF_8);
 	}
 	//Tested
 	public static void addDispString(File file, String stringtodisplay) throws IOException
@@ -124,6 +142,14 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~skip:" + identifier);
 		fw.close();
 	}
+	
+	public static void addSkip(int position, File file, String identifier) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write("/~skip:" + identifier);
+		fw.close();
+	}
 	//Tested
 	public static void addDispClearAll(File file) throws IOException
 	{
@@ -148,6 +174,20 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write(System.lineSeparator());
 		fw.write("/~disp-cell-pins:" +correctedCellNum  + " " + sequence);
 		fw.close();
+	}
+	
+	public static void addDispCellPins(int position, File file, int cellnum, int sequence) throws IOException
+	{
+		int correctedCellNum = cellnum-1;
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+
+		//int position = 3;
+		//String extraLine = "Maa chuda le";  
+
+		lines.add(position, "/~disp-cell-pins:" + correctedCellNum  + " " + sequence);
+		lines.remove(position+1);
+		Files.write(path, lines, StandardCharsets.UTF_8);
 	}
 	//Tested
 	public static void addDispCellChar(File file, int cellnum, String character) throws IOException
@@ -189,13 +229,45 @@ public class LineEditor { //model in the model view controller for the scenario 
 			fw.close();
 		}
 	}
+	
+	
+	public static void activateKeys(int position, File file, int keyNum) throws IOException
+	{
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		
+		if(keyNum==1)
+		{
+			lines.add(position, "/~skip-button:0 ONEE");
+			lines.remove(position+1);	
+		}
+		if(keyNum==2)
+		{
+			lines.add(position, "/~skip-button:1 TWOO");
+			lines.remove(position+1);	
+		}
+		Files.write(path, lines, StandardCharsets.UTF_8);
+	}
 	//Tested
+
 	public static void addString(File file, String toAdd) throws IOException
 	{
 		FileWriter fw = new FileWriter(file.getAbsolutePath(), true);
 		fw.write(System.lineSeparator());
 		fw.write(toAdd);
 		fw.close();
+		
+	}
+	
+	public static void addString(int position, File file, String toAdd) throws IOException
+	{
+		
+			Path path = Paths.get(file.getAbsolutePath());
+			List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+
+			lines.add(position, toAdd);
+			lines.remove(position+1);
+			Files.write(path, lines, StandardCharsets.UTF_8);
 		
 	}
 	//Tested
@@ -211,7 +283,39 @@ public class LineEditor { //model in the model view controller for the scenario 
 		{
 			fw.write("/~TWOO");
 		}
+		
+		if(keyNum==3)
+		{
+			fw.write("/~THREE");
+		}
 		fw.close();
+	}
+	
+	public static void addBlankLine(File file) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsolutePath(), true);
+		fw.write(System.lineSeparator());
+		fw.write(" ");
+		fw.close();	
+	}
+	public static void setKey(int position, File file, int keyNum) throws IOException
+	{
+
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		if(keyNum==1)
+		{
+			lines.add(position, "/~ONEE");
+			lines.remove(position+1);	
+		}
+		
+		if(keyNum==2)
+		{
+			lines.add(position, "/~TWOO");
+			lines.remove(position+1);
+		}
+		
+		Files.write(path, lines, StandardCharsets.UTF_8);
 	}
 	//Tested
 	public static void nextQuestion(File file) throws IOException
