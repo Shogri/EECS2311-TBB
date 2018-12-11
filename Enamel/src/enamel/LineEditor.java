@@ -180,7 +180,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 	{
 		Path path = Paths.get(file.getAbsolutePath());
 		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
-		lines.add(position, String.valueOf(cellnum));
+		lines.add(position, "/~disp-clear-cell:"+String.valueOf(cellnum));
 		lines.remove(position+1);
 		Files.write(path, lines, StandardCharsets.UTF_8);
 	}

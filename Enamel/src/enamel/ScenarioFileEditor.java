@@ -689,7 +689,10 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		//System.out.println(this.listModel.get(0));
 		int selected = list_1.getSelectedIndex();
 		String starting = this.listModel.getElementAt(selected);
-		String afterStarting = this.listModel.getElementAt(selected+1);
+		//if(this.listModel.getElementAt(selected+1)!=null)
+		
+		//String afterStarting = this.listModel.getElementAt(selected+1);
+		
 		System.out.println("Selected " +selected);
 		if(starting.startsWith("A)"))
 		{
@@ -719,6 +722,11 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		
 		if(starting.startsWith("Say:"))
 		{
+			if(this.listModel.getElementAt(selected+1)!=null)
+			{
+			String afterStarting = this.listModel.getElementAt(selected+1);
+			
+			
 			if(afterStarting.startsWith("First"))
 			{
 				String disp_cell_config = JOptionPane.showInputDialog(this, "Enter Question");
@@ -735,6 +743,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					}
 			}
 		}
+			}
 			else
 			{
 				String addText = JOptionPane.showInputDialog(this,
@@ -883,7 +892,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"Please Enter The String to be displayed", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				this.listModel.add(selected, "J)"+(stringTBdisplay.getText()));
+				this.listModel.add(selected, "J)Display a string: "+(stringTBdisplay.getText()));
 				try {
 					LineEditor.addDispString(selected, this.selectedfile, stringTBdisplay.getText());
 				} catch (Exception e1) {
@@ -920,7 +929,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"Please Enter The Cell to be Cleared", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				this.listModel.add(selected,"L)" + " " + (cellTbCleared.getText()));
+				this.listModel.add(selected,"L)Clear Cell" + " " + (cellTbCleared.getText()));
 				try {
 					LineEditor.addDispClearCell(selected,this.selectedfile, Integer.parseInt(cellTbCleared.getText()));
 				} catch (Exception e1) {
@@ -1255,7 +1264,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				int result = JOptionPane.showConfirmDialog(null, myPanel,
 						"Please Enter The String to be displayed", JOptionPane.OK_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION) {
-					this.listModel.addElement(option + " " + (stringTBdisplay.getText()));
+					this.listModel.addElement(option + ": " + (stringTBdisplay.getText()));
 					try {
 						LineEditor.addDispString(this.selectedfile, stringTBdisplay.getText());
 					} catch (Exception e1) {
