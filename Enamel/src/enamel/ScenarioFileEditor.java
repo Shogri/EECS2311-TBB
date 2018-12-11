@@ -467,13 +467,19 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		}
 		this.selectedfile = chooser1.getSelectedFile();
 		this.selectedfilepath = chooser1.getSelectedFile().getAbsolutePath();
-
+		
+		System.out.println("Test1: passed");
+		
 		this.label_selected_scenario.setText(chooser1.getSelectedFile().getName());
-
+		
+		System.out.println("test 2: Passed");
+		
 		this.label_selected_scenario.setText("Selected Scenario: " + chooser1.getSelectedFile().getName());
-
+		System.out.println("test 3:Passed");
 		try {
-			LineEditor.parseScenario(this.selectedfile, listModel);
+			System.out.println("Test 4: Passed");
+			LineEditor.parseScenario(this.selectedfile, this.listModel);
+			
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -683,6 +689,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		//System.out.println(this.listModel.get(0));
 		int selected = list_1.getSelectedIndex();
 		String starting = this.listModel.getElementAt(selected);
+		String afterStarting = this.listModel.getElementAt(selected+1);
 		System.out.println("Selected " +selected);
 		if(starting.startsWith("A)"))
 		{
@@ -710,7 +717,47 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			deleteField();
 		}
 		
-		if(starting.startsWith("B)"))
+		if(starting.startsWith("Say:"))
+		{
+			if(afterStarting.startsWith("First"))
+			{
+				String disp_cell_config = JOptionPane.showInputDialog(this, "Enter Question");
+				if (disp_cell_config == null) {
+					return;
+				} else {
+					this.listModel.add(selected,"Say: "+ disp_cell_config);
+					try {
+						LineEditor.addString(selected, this.selectedfile, disp_cell_config);
+					}
+
+					catch (Exception e1) {
+						e1.printStackTrace();
+					}
+			}
+		}
+			else
+			{
+				String addText = JOptionPane.showInputDialog(this,
+						"Please enter the text that you would like to be read out");
+				if (addText.isEmpty()) {
+					return;
+				} 
+				
+				else {
+					
+					this.listModel.add(selected, "Say: " +addText);
+					try {
+						LineEditor.addString(selected, this.selectedfile, addText);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+			}
+				
+				
+		}
+		
+		/*
+		if(starting.startsWith("Say:"))
 		{
 			String addText = JOptionPane.showInputDialog(this,
 					"Please enter the text that you would like to be read out");
@@ -720,7 +767,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			
 			else {
 				
-				this.listModel.addElement("B) " +addText);
+				this.listModel.add(selected, "B) " +addText);
 				try {
 					LineEditor.addString(selected, this.selectedfile, addText);
 				} catch (Exception e1) {
@@ -729,22 +776,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				deleteField();
 		}
 		}
-		if(starting.startsWith("C)"))
-				{
-					
-			String disp_cell_config = JOptionPane.showInputDialog(this, "Enter Question");
-			if (disp_cell_config == null) {
-				return;
-			} else {
-				this.listModel.add(selected,"C) "+ disp_cell_config);
-				try {
-					LineEditor.addString(selected, this.selectedfile, disp_cell_config);
-				}
-
-				catch (Exception e1) {
-					e1.printStackTrace();
-				}
-			}
+		*/
 			/*
 			String cellsToActivate = JOptionPane.showInputDialog(this,
 					"Enter the keys you'd like to activate" + ", separated by a comma");
@@ -775,7 +807,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			if (wrong_key == null) {
 				return;
 			} else {
-				this.listModel.addElement("D) Correct Answer: " + wrong_key);
+				this.listModel.add(selected,"D) Correct Answer: " + wrong_key);
 				try {
 					LineEditor.setKey(selected, this.selectedfile, Integer.valueOf(wrong_key));
 				} catch (Exception e1) {
@@ -787,13 +819,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		
 		if(starting.startsWith("E)"))
 		{
-			this.listModel.addElement("Correct answer explanation starts here");
+			this.listModel.add(selected, "Correct answer explanation starts here");
 			deleteField();
 		}
 		
 		if(starting.startsWith("F)"))
 		{
-			this.listModel.addElement("F) Correct answer explanation ends here");
+			this.listModel.add(selected,"F) Correct answer explanation ends here");
 			try {
 				LineEditor.addSkip(this.selectedfile, "NEXTT");
 			} catch (Exception e1) {
@@ -809,7 +841,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			if (wrong_key == null) {
 				return;
 			} else {
-				this.listModel.addElement("G) Wrong Answer: " + wrong_key);
+				this.listModel.add(selected,"G) Wrong Answer: " + wrong_key);
 				try {
 					LineEditor.setKey(selected, this.selectedfile, Integer.valueOf(wrong_key));
 				} catch (Exception e1) {
@@ -822,14 +854,15 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		
 		if(starting.startsWith("H)"))
 		{
-			this.listModel.addElement("Wrong answer explanation starts here");
+			this.listModel.add(selected,"Wrong answer explanation starts here");
 			deleteField();
 		}
 		
 		if(starting.startsWith("I)"))
 		{
-			this.listModel.addElement("I) Wrong answer explanation ends here");
-			this.listModel.addElement(" ");
+			this.listModel.add(selected,"I) Wrong answer explanation ends here");
+			this.listModel.add(selected+1," ");
+			this.listModel.add(selected+2," ");
 			try {
 				LineEditor.addSkip(this.selectedfile, "NEXTT");
 				LineEditor.nextQuestion(this.selectedfile);
@@ -850,9 +883,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"Please Enter The String to be displayed", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				this.listModel.addElement("J)"+(stringTBdisplay.getText()));
+				this.listModel.add(selected, "J)"+(stringTBdisplay.getText()));
 				try {
-					LineEditor.addDispString(this.selectedfile, stringTBdisplay.getText());
+					LineEditor.addDispString(selected, this.selectedfile, stringTBdisplay.getText());
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -867,9 +900,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			int returnval = soundChooser.showOpenDialog(parent);
 			if (returnval == JFileChooser.APPROVE_OPTION) {
 				String soundName = soundChooser.getSelectedFile().getName();
-				this.listModel.addElement("Playing Sound: " + soundName);
+				this.listModel.add(selected, "K)Playing Sound: " + soundName);
 				try {
-					LineEditor.importSound(this.selectedfile, soundName);
+					LineEditor.importSound(selected,this.selectedfile, soundName);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}	
@@ -887,9 +920,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"Please Enter The Cell to be Cleared", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				this.listModel.addElement("L)" + " " + (cellTbCleared.getText()));
+				this.listModel.add(selected,"L)" + " " + (cellTbCleared.getText()));
 				try {
-					LineEditor.addDispClearCell(this.selectedfile, Integer.parseInt(cellTbCleared.getText()));
+					LineEditor.addDispClearCell(selected,this.selectedfile, Integer.parseInt(cellTbCleared.getText()));
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -908,9 +941,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"How long do you want the pause to be?", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				this.listModel.addElement("M)" + " " + (pauseLength.getText()));
+				this.listModel.add(selected, "M) Add Pause" + " " + (pauseLength.getText()));
 				try {
-					LineEditor.addPause(this.selectedfile, Integer.parseInt(pauseLength.getText()));
+					LineEditor.addPause(selected,this.selectedfile, Integer.parseInt(pauseLength.getText()));
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
@@ -939,7 +972,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					if (disp_cell_config == null) {
 						return;
 					} else {
-						this.listModel.addElement("C) "+disp_cell_config);
+						this.listModel.addElement("Say: "+disp_cell_config);
 						try {
 							LineEditor.addString(this.selectedfile, disp_cell_config);
 						}
@@ -1047,7 +1080,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					int returnval = soundChooser.showOpenDialog(parent);
 					if (returnval == JFileChooser.APPROVE_OPTION) {
 						String soundName = soundChooser.getSelectedFile().getName();
-						this.listModel.addElement("Playing Sound: " + soundName);
+						this.listModel.addElement("K) Playing Sound: " + soundName);
 						try {
 							LineEditor.importSound(this.selectedfile, soundName);
 						} catch (Exception e1) {
@@ -1083,7 +1116,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					
 					else {
 						
-						this.listModel.addElement("B) " +addText);
+						this.listModel.addElement("Say: " +addText);
 						try {
 							LineEditor.addString(this.selectedfile, addText);
 						} catch (Exception e1) {
@@ -1186,6 +1219,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					return;
 				} else {
 					this.listModel.addElement("I) Wrong answer explanation ends here");
+					this.listModel.addElement(" ");
 					this.listModel.addElement(" ");
 					try {
 						LineEditor.addSkip(this.selectedfile, "NEXTT");
