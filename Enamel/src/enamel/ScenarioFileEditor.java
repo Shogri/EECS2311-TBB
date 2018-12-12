@@ -754,7 +754,8 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		
 		if(starting.startsWith("Say:"))
 		{
-			if(this.listModel.size()>selected+1)
+			/*
+			if(this.listModel.size()>=selected+1)
 			{
 			String afterStarting = this.listModel.getElementAt(selected+1);
 			
@@ -776,8 +777,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 		}
 			}
-			else
-			{
+			*/
+		//	else
+			//{
 				String addText = JOptionPane.showInputDialog(this,
 						"Please enter the text that you would like to be read out");
 				if (addText.isEmpty()) {
@@ -792,7 +794,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
-			}
+				//}
 				
 				
 		}
