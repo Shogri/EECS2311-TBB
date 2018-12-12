@@ -722,7 +722,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		
 		if(starting.startsWith("Say:"))
 		{
-			if(this.listModel.getElementAt(selected+1)!=null)
+			if(this.listModel.size()>selected+1)
 			{
 			String afterStarting = this.listModel.getElementAt(selected+1);
 			
