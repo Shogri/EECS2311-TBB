@@ -991,13 +991,14 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		}
 			deleteField();
 		}
-		
+		//test-push
 		if(starting.startsWith("P)"))
 		{
 			JTextField cellnum = new JTextField(6);
 			JPanel myPanel = new JPanel();
 			myPanel.add(new JLabel("Cell#"));
 			myPanel.add(cellnum);
+			
 			
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"Please Enter Cell# to be cleared", JOptionPane.OK_CANCEL_OPTION);
