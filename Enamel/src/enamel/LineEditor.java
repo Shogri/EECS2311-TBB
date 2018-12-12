@@ -176,6 +176,17 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.close();
 	}
 	
+	public static void deleteLine(int position, File file) throws IOException
+	{
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		lines.remove(position);
+		for(int i = 0;i<lines.size();i++)
+		{
+			lines.get(i).trim();
+		}
+		Files.write(path, lines, StandardCharsets.UTF_8);
+	}
 	public static void addDispClearCell(int position, File file, int cellnum) throws IOException
 	{
 		Path path = Paths.get(file.getAbsolutePath());
@@ -395,13 +406,19 @@ public class LineEditor { //model in the model view controller for the scenario 
 
 			// The key phrase to indicate to skip to another part of the
 			// scenario.
-			else if (fileLine.length() >= 7 && fileLine.substring(0, 7).equals("/~skip:")) {
+		/*	
+		else if (fileLine.length() >= 7 && fileLine.substring(0, 7).equals("/~skip:")) {
 				listModel.addElement(TAB +"Skip to line # " + fileLine.substring(7));
+			}
+			*/
+			else if(fileLine.equals("/~skip:NEXTT"))
+			{
+				listModel.addElement("Answer explanation ends here");
 			}
 			// The key phrase to indicate to pause for a specified number of
 			// seconds.
 			else if (fileLine.length() >= 8 && fileLine.substring(0, 8).equals("/~pause:")) {
-				listModel.addElement(TAB +"Pause for " + fileLine.substring(8) + " Seconds");
+				listModel.addElement(TAB +"M)Add Pause: " + fileLine.substring(8) + " Seconds");
 			}
 			// The key phrase to assign a button to repeat text.
 			 else if (fileLine.length() >= 16 && fileLine.substring(0, 16).equals("/~repeat-button:")) {
@@ -437,11 +454,11 @@ public class LineEditor { //model in the model view controller for the scenario 
 			}
 			// The key phrase to set a Braille cell to a string.
 			 else if (fileLine.length() >= 17 && fileLine.substring(0, 17).equals("/~disp-cell-pins:")) {
-				listModel.addElement(TAB +"Display cell #" + fileLine.substring(17).split(" ")[0] + "for the letter " + fileLine.substring(17).split(" ")[1]);
+				listModel.addElement(TAB +"A) Display cell number " + fileLine.substring(17).split(" ")[0] + ", with configuration " + fileLine.substring(17).split(" ")[1]);
 			}
 			// The key phrase to represent a string in Braille.
 			 else if (fileLine.length() >= 14 && fileLine.substring(0, 14).equals("/~disp-string:")) {
-				listModel.addElement(TAB +"Display the string: " + "\'" + fileLine.substring(14) + "\'" );
+				listModel.addElement(TAB +"J)Display A string: "+ fileLine.substring(14));
 				
 			}
 			// The key phrase to change the cell to represent a character in
@@ -489,6 +506,12 @@ public class LineEditor { //model in the model view controller for the scenario 
 				 listModel.addElement("D)Correct Answer: 1");
 				 listModel.addElement("Correct Answer Starts here");
 			 }
+		
+			 else if(fileLine.equals("/~TWOO"))
+			 {
+				 listModel.addElement("D)Wrong Answer: 2");
+				 listModel.addElement("Wrong Answer Starts here");
+			 }
 			 
 					// The key phrase to indicate to play a sound file.
 			/*
@@ -503,6 +526,11 @@ public class LineEditor { //model in the model view controller for the scenario 
 			 else if(fileLine.equals(" ") || fileLine.isEmpty())
 			 {
 				 return;
+			 }
+			 else if(fileLine.equals("/~NEXTT"))
+			 {
+				 listModel.addElement(" ");
+				 listModel.addElement(" ");
 			 }
 			else {
 				listModel.addElement(TAB +"Say: " + fileLine);

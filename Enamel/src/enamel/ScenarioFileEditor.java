@@ -950,7 +950,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			int result = JOptionPane.showConfirmDialog(null, myPanel,
 					"How long do you want the pause to be?", JOptionPane.OK_CANCEL_OPTION);
 			if (result == JOptionPane.OK_OPTION) {
-				this.listModel.add(selected, "M) Add Pause" + " " + (pauseLength.getText()));
+				this.listModel.add(selected, "M) Add Pause:" + " " + (pauseLength.getText())+" seconds");
 				try {
 					LineEditor.addPause(selected,this.selectedfile, Integer.parseInt(pauseLength.getText()));
 				} catch (Exception e1) {
@@ -1329,7 +1329,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 					int result = JOptionPane.showConfirmDialog(null, myPanel,
 							"How long do you want the pause to be?", JOptionPane.OK_CANCEL_OPTION);
 					if (result == JOptionPane.OK_OPTION) {
-						this.listModel.addElement(option + " " + (pauseLength.getText()));
+						this.listModel.addElement("M)Add Pause:" + " " + (pauseLength.getText())+" seconds");
 						try {
 							LineEditor.addPause(this.selectedfile, Integer.parseInt(pauseLength.getText()));
 						} catch (Exception e1) {
@@ -1354,6 +1354,13 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 */
 		// delete selected field
 		if (e.getSource().equals(this.button_delete_field)) {
+			int selected = list_1.getSelectedIndex();
+			try {
+				LineEditor.deleteLine(selected, this.selectedfile);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			this.deleteField();
 			this.isSaved = false;
 		}
