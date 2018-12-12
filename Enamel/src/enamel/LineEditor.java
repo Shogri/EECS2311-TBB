@@ -165,7 +165,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		int correctedCellNum = cellNum-1;
 		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
 		fw.write(System.lineSeparator());
-		fw.write("/~disp-cell-pins:" +correctedCellNum);
+		fw.write("/~disp-clear-cell:" +correctedCellNum);
 		fw.close();
 	}
 	
@@ -488,7 +488,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 				listModel.addElement(TAB +"Clear all existing cells");
 			}
 			// The key phrase to set a Braille cell to a string.
-			 else if (fileLine.length() >= 17 && fileLine.substring(0, 17).equals("/~disp-cell-pins:")) {
+			 else if (fileLine.startsWith("/~disp-cell-pins:")) {
 				listModel.addElement(TAB +"A) Display cell number " + fileLine.substring(17).split(" ")[0] + ", with configuration " + fileLine.substring(17).split(" ")[1]);
 			}
 			// The key phrase to represent a string in Braille.
@@ -566,6 +566,21 @@ public class LineEditor { //model in the model view controller for the scenario 
 			 {
 				 listModel.addElement(" ");
 				 listModel.addElement(" ");
+			 }
+		
+			 else if(fileLine.equals("/~disp-clearALL"))
+			 {
+				 listModel.addElement("O) Clear All Cells");
+			 }
+			
+			 else if(fileLine.equals("/~reset-buttons"))
+			 {
+				 listModel.addElement("N) Reset Buttons");
+			 }
+		
+			 else if(fileLine.startsWith("/~disp-clear-cell"))
+			 {
+				 listModel.addElement("P) Clear a cell: Cell Number: "+fileLine.substring(18)); 
 			 }
 			else {
 				listModel.addElement(TAB +"Say: " + fileLine);
