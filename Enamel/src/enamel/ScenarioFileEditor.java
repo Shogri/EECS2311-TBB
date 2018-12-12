@@ -82,7 +82,7 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 	String[] addfield_selections = { "Add a field...", "A) Display", "B) Add Text", "C) Ask Question",
 			"D) Specify Correct Answer Key", "E) Begin Correct Answer Explanation", "F) End Correct Answer Explanation",
 			"G) Specify Wrong Answer Key", "H) Begin Wrong Answer Explanation", "I) End Wrong Answer Explanation",
-			"J) Display A string","K) Import Sound File", "L) Clear cell", "M) Add Pause"};
+			"J) Display A string","K) Import Sound File", "L) Clear cell", "M) Add Pause","N) Reset Buttons", "O) Clear All Cells", "P) Clear A Cell"};
 	JComboBox add_field_dropdown;
 	JScrollPane scroll;
 	private JScrollPane scrollPane;
@@ -647,6 +647,38 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 			}
 			this.isSaved = false;
 		}
+		
+		if (e.getSource().equals(this.add_field_dropdown)) {
+			JComboBox cb = (JComboBox) e.getSource();
+			String option = (String) cb.getSelectedItem();
+			/**
+			 * To display a character
+			 */
+			if (option.equals("P) Clear A Cell")) {
+
+				if (this.selectedfile == null) {
+					JOptionPane.showMessageDialog(null, "Error: Please select a file");
+					return;
+				}
+				JTextField cellnum = new JTextField(6);
+				JPanel myPanel = new JPanel();
+				myPanel.add(new JLabel("Cell#"));
+				myPanel.add(cellnum);
+				
+				int result = JOptionPane.showConfirmDialog(null, myPanel,
+						"Please Enter Cell# to be cleared", JOptionPane.OK_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					this.listModel.addElement("P) Clear A Cell:" + " cell number: " + Integer.parseInt(cellnum.getText()));
+				//	this.list_1.add
+					try {
+						LineEditor.addClearCell(this.selectedfile, Integer.parseInt(cellnum.getText()));
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+			this.isSaved = false;
+		}
 	//}
 		/*if (e.getSource().equals(this.button_edit_field)) {
 			//System.out.println(this.listModel.get(0));
@@ -959,6 +991,28 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 		}
 			deleteField();
 		}
+		
+		if(starting.startsWith("P)"))
+		{
+			JTextField cellnum = new JTextField(6);
+			JPanel myPanel = new JPanel();
+			myPanel.add(new JLabel("Cell#"));
+			myPanel.add(cellnum);
+			
+			int result = JOptionPane.showConfirmDialog(null, myPanel,
+					"Please Enter Cell# to be cleared", JOptionPane.OK_CANCEL_OPTION);
+			if (result == JOptionPane.OK_OPTION) {
+				this.listModel.add(selected,"P) Clear A Cell:" + " cell number: " + Integer.parseInt(cellnum.getText()));
+			//	this.list_1.add
+				try {
+					LineEditor.addClearCell(selected, this.selectedfile, Integer.parseInt(cellnum.getText()));
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		
+		deleteField();
 	}
 
 	
@@ -1307,6 +1361,52 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				this.isSaved = false;
 			}
 			
+			if(e.getSource().equals(this.add_field_dropdown))
+			{
+				JComboBox cb = (JComboBox) e.getSource();
+				String option = (String) cb.getSelectedItem();
+				
+				if(option.equals("N) Reset Buttons"))
+				{
+					if (this.selectedfile == null) {
+						JOptionPane.showMessageDialog(null, "Error: Please select a file");
+						return;
+					}
+					
+					this.listModel.addElement("N) Reset Buttons");
+					try {
+						LineEditor.addResetButtons(this.selectedfile);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				this.isSaved = false;
+			}
+			
+			if(e.getSource().equals(this.add_field_dropdown))
+			{
+				JComboBox cb = (JComboBox) e.getSource();
+				String option = (String) cb.getSelectedItem();
+				
+				if(option.equals("O) Clear All Cells"))
+				{
+					if (this.selectedfile == null) {
+						JOptionPane.showMessageDialog(null, "Error: Please select a file");
+						return;
+					}
+					
+					this.listModel.addElement("O) Clear All Cells");
+					try {
+						LineEditor.addClearAllCells(this.selectedfile);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+				this.isSaved = false;
+			}
+			
+			
+			
 			/*
 			 * To Add a Pause
 			 */
@@ -1339,7 +1439,9 @@ public class ScenarioFileEditor extends JFrame implements ActionListener, ListSe
 				}
 				this.isSaved = false;
 			}
-	
+			
+			
+			
 			/**
 			 * Edit field
 			 */

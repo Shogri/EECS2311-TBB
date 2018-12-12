@@ -143,6 +143,40 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~sound:" + soundFileName);
 		fw.close();
 	}
+	
+	public static void addResetButtons(File file) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write("/~reset-buttons");
+		fw.close();
+	}
+	
+	public static void addClearAllCells(File file) throws IOException
+	{
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write("/~disp-clearAll");
+		fw.close();
+	}
+	
+	public static void addClearCell(File file, int cellNum) throws IOException
+	{
+		int correctedCellNum = cellNum-1;
+		FileWriter fw = new FileWriter(file.getAbsoluteFile(), true);
+		fw.write(System.lineSeparator());
+		fw.write("/~disp-cell-pins:" +correctedCellNum);
+		fw.close();
+	}
+	
+	public static void addClearCell(int position, File file, int cellNum) throws IOException
+	{
+		Path path = Paths.get(file.getAbsolutePath());
+		List<String> lines = Files.readAllLines(path, StandardCharsets.UTF_8);
+		lines.add(position, "/~disp-clear-cell:"+cellNum);
+		lines.remove(position+1);
+		Files.write(path, lines, StandardCharsets.UTF_8);
+	}
 	//Tested
 	public static void addSkip(File file, String identifier) throws IOException
 	{
@@ -151,6 +185,7 @@ public class LineEditor { //model in the model view controller for the scenario 
 		fw.write("/~skip:" + identifier);
 		fw.close();
 	}
+	
 	
 	public static void addSkip(int position, File file, String identifier) throws IOException
 	{
@@ -514,15 +549,15 @@ public class LineEditor { //model in the model view controller for the scenario 
 			 }
 			 
 					// The key phrase to indicate to play a sound file.
-			/*
-			 else if( (fileLine.length() >= 7 && fileLine.substring(0, 8).equals("/~sound:"))) {
+			
+			 else if(fileLine.startsWith("/~sound")) {
 						//if (tabbed)
 						//{
 					System.out.println("Hi");
 							listModel.addElement("K) Playing Sound: "+ fileLine.substring(8));
 						//}
 					}
-				*/
+			
 			 else if(fileLine.equals(" ") || fileLine.isEmpty())
 			 {
 				 return;
